@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ post.title }} | BUCAM S.R.L.</title>
+    <style>
+        :root{--panel:#181818;--panel2:#222;--ink:#f5f7fb;--muted:#a5acb8;--line:rgba(255,255,255,.08);--shadow:0 28px 60px rgba(0,0,0,.35)}
+        *{box-sizing:border-box} body{margin:0;background:linear-gradient(180deg,#121212 0%,#0d0d0d 100%);color:var(--ink);font-family:Segoe UI,Tahoma,Geneva,Verdana,sans-serif}
+        a{color:inherit;text-decoration:none}.shell{width:min(1080px,calc(100% - 32px));margin:0 auto}.topbar{padding:24px 0 16px}
+        .back{display:inline-flex;padding:10px 14px;border:1px solid var(--line);border-radius:999px;color:var(--muted)}
+        .hero{min-height:380px;padding:36px;display:flex;align-items:end;background:linear-gradient(180deg,rgba(2,6,10,.08),rgba(2,6,10,.86)),linear-gradient(135deg,rgba(12,54,86,.78),rgba(16,16,16,.8));background-size:cover;background-position:center;border:1px solid var(--line);box-shadow:var(--shadow)}
+        .eyebrow{display:inline-block;padding:8px 12px;margin-bottom:14px;background:rgba(0,0,0,.35);border:1px solid rgba(255,255,255,.08);color:#d7f8ff;text-transform:uppercase;font-size:.78rem}
+        h1,h2,h3,p{margin-top:0} h1,h2,h3{font-family:"Arial Narrow","Bahnschrift SemiCondensed",sans-serif;text-transform:uppercase;line-height:1.08}
+        h1{font-size:clamp(2.4rem,5vw,4.4rem);margin-bottom:14px}.excerpt,.body,.recent-item span{color:#dbe1ea;line-height:1.8}
+        .meta{display:flex;gap:16px;flex-wrap:wrap;margin-top:16px;color:#98a3b1}.layout{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(280px,.75fr);gap:28px;padding:28px 0 42px}
+        .article,.sidebar-card{background:var(--panel);border:1px solid var(--line);box-shadow:var(--shadow)} .article,.sidebar-card{padding:24px}
+        .sidebar{display:grid;gap:20px}.recent-list{display:grid;gap:14px}.recent-item{display:block;padding:16px;background:var(--panel2);border:1px solid var(--line)}
+        .recent-item strong{display:block;margin-bottom:8px}
+        @media (max-width:900px){.layout{grid-template-columns:1fr}.hero{padding:24px}}
+    </style>
+</head>
+<body>
+    <div class="shell topbar"><a class="back" href="{% url 'core:home' %}">&larr; Volver al inicio</a></div>
+    <main class="shell">
+        <section class="hero"{% if post.image_url %} style="background-image:linear-gradient(180deg,rgba(2,6,10,.08),rgba(2,6,10,.86)),url('{{ post.image_url }}');"{% endif %}>
+            <div>
+                {% if post.eyebrow %}<div class="eyebrow">{{ post.eyebrow }}</div>{% endif %}
+                <h1>{{ post.title }}</h1>
+                <p class="excerpt">{{ post.excerpt }}</p>
+                <div class="meta">
+                    <span>Publicado el {{ post.published_at|date:"j \\d\\e F, Y" }}</span>
+                    <span>Tono {{ post.get_tone_display }}</span>
+                </div>
+            </div>
+        </section>
+        <section class="layout">
+            <article class="article">
+                <h2>Detalle</h2>
+                <div class="body">{{ post.body|default:post.excerpt }}</div>
+            </article>
+            <aside class="sidebar">
+                <section class="sidebar-card">
+                    <h2>Mas entradas</h2>
+                    <div class="recent-list">
+                        {% for item in recent_posts %}
+                            <a class="recent-item" href="{{ item.get_absolute_url }}">
+                                <strong>{{ item.title }}</strong>
+                                <span>{{ item.excerpt }}</span>
+                            </a>
+                        {% empty %}
+                            <span>No hay otras entradas publicadas todavia.</span>
+                        {% endfor %}
+                    </div>
+                </section>
+            </aside>
+        </section>
+    </main>
+</body>
+</html>
