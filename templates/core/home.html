@@ -1,45 +1,23 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BUCAM S.R.L. | Seguridad Privada</title>
-    <style>
-        :root{--bg:#111;--panel:#1a1a1a;--panel2:#222;--ink:#f5f7fb;--muted:#a5acb8;--line:rgba(255,255,255,.08);--brand:#16b7d6}
-        *{box-sizing:border-box} body{margin:0;background:linear-gradient(180deg,#121212 0%,#0d0d0d 100%);color:var(--ink);font-family:Segoe UI,Tahoma,Geneva,Verdana,sans-serif}
-        a{color:inherit;text-decoration:none} .shell{width:min(1180px,calc(100% - 32px));margin:0 auto}
-        .top{margin:18px auto 0;padding:28px 24px;text-align:center;background:linear-gradient(135deg,rgba(255,255,255,.92),rgba(236,238,243,.92));color:#0c3656}
-        .top h1{margin:0;font:700 clamp(2rem,4vw,3.2rem) Georgia,serif}.top p{margin:8px 0 0;font-style:italic}
-        .nav,.ticker,.card,.section,.sidebar-card,.cta,.detail-card{border:1px solid var(--line);background:var(--panel)}
-        .nav{margin-top:24px}.nav-inner,.ticker{display:flex;gap:14px;align-items:center;flex-wrap:wrap;padding:16px 18px}
-        .nav a{font:700 1rem "Arial Narrow","Bahnschrift SemiCondensed",sans-serif;text-transform:uppercase;padding:8px 10px;border-radius:999px}
-        .nav a:hover,.btn{background:var(--brand);color:#00161d}.ticker{margin-top:10px;color:var(--muted)}
+{% extends 'core/base.html' %}
+
+{% block extra_css %}
         .hero,.services,.content{display:grid;gap:20px}.hero{grid-template-columns:1.1fr 1fr;padding:28px 0 20px}.services{grid-template-columns:repeat(3,1fr);padding-bottom:28px}.content{grid-template-columns:1.5fr .75fr;padding-bottom:42px}
         .card,.detail-card{position:relative;overflow:hidden;min-height:280px;background-size:cover;background-position:center}
         .overlay{position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.12),rgba(0,0,0,.78))}
-        .copy{position:absolute;left:24px;right:24px;bottom:24px;z-index:1}.eyebrow{display:inline-block;padding:7px 10px;margin-bottom:12px;background:rgba(0,0,0,.35);border:1px solid rgba(255,255,255,.08);color:#d7f8ff;text-transform:uppercase;font-size:.78rem}
-        h1,h2,h3{margin:0 0 10px;font-family:"Arial Narrow","Bahnschrift SemiCondensed",sans-serif;text-transform:uppercase;line-height:1.1}
+        .copy{position:absolute;left:24px;right:24px;bottom:24px;z-index:1}
         .hero .card:first-child{min-height:420px;background-image:linear-gradient(135deg,rgba(12,54,86,.82),rgba(16,16,16,.9))}
         .hero .card:last-child{min-height:420px;background-image:linear-gradient(135deg,rgba(4,18,33,.94),rgba(16,16,16,.9))}
-        .card p,.section p,.sidebar-card p,.meta,.list{color:var(--muted);line-height:1.7}.btn{display:inline-block;padding:12px 16px;border-radius:999px;font-weight:700;margin-top:14px}
         .service-card{min-height:240px}.section,.sidebar-card,.cta{padding:24px}.label{display:inline-block;background:var(--brand);color:#04222d;padding:10px 16px;font:700 1.2rem "Arial Narrow","Bahnschrift SemiCondensed",sans-serif;text-transform:uppercase;margin-bottom:18px}
         .list{padding-left:18px}.recent-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:20px}.recent-card .body{padding:22px}.recent-thumb{height:220px;background:linear-gradient(135deg,#093f58,#0b1720);background-size:cover;background-position:center}
         .sidebar{display:grid;gap:20px}.meta{display:flex;gap:14px;flex-wrap:wrap;font-size:.95rem}
         @media (max-width:980px){.hero,.services,.content,.recent-grid{grid-template-columns:1fr}}
-    </style>
-</head>
-<body>
-    <header class="shell top" id="inicio">
-        <h1>BUCAM S.R.L.</h1>
-        <p>Seguridad Privada &amp; Proteccion Integral</p>
-    </header>
-    <nav class="shell nav">
-        <div class="nav-inner">
-            <a href="#inicio">Inicio</a><a href="#mision">Mision y vision</a><a href="#quienes-somos">Quienes somos</a><a href="#servicios">Servicios</a><a href="#tecnologia">Tecnologia</a>
-        </div>
-    </nav>
-    <div class="shell ticker"><strong>Actualidad</strong><span>Custodia VIP y proteccion personalizada con estandares operativos claros.</span></div>
+{% endblock %}
 
+{% block ticker %}
+    <div class="shell ticker"><strong>Actualidad</strong><span>Custodia VIP y proteccion personalizada con estandares operativos claros.</span></div>
+{% endblock %}
+
+{% block content %}
     <main class="shell">
         <section class="hero">
             <article class="card">
@@ -48,7 +26,7 @@
                     <div class="eyebrow">Protegemos lo que mas importa</div>
                     <h1>Seguridad profesional para personas, instalaciones y operaciones criticas</h1>
                     <p>BUCAM S.R.L. combina presencia operativa, supervision constante y tecnologia para construir servicios de seguridad privada con respuesta real.</p>
-                    <a class="btn" href="#contacto">Solicitar propuesta</a>
+                    <a class="btn" href="mailto:contacto@bucam.local">Solicitar propuesta</a>
                 </div>
             </article>
             <article class="card{% if featured_services|length > 1 and featured_services.1.image_url %} detail-card{% endif %}"{% if featured_services|length > 1 and featured_services.1.image_url %} style="background-image:url('{{ featured_services.1.image_url }}');"{% endif %}>
@@ -61,7 +39,7 @@
             </article>
         </section>
 
-        <section class="services" id="servicios">
+        <section class="services">
             {% for service in featured_services %}
                 <article class="card service-card"{% if service.image_url %} style="background-image:url('{{ service.image_url }}');"{% endif %}>
                     <div class="overlay"></div>
@@ -85,10 +63,10 @@
         <section class="content">
             <div>
                 <section class="section">
-                    <div class="label" id="mision">Recientes</div>
+                    <div class="label">Recientes</div>
                     <h2>Una estructura clara para transmitir confianza desde el primer vistazo</h2>
                     <p>La landing ordena servicios, respaldo operativo y llamados a la accion con una grilla institucional directa y facil de administrar.</p>
-                    <p id="quienes-somos">Trabajamos con una propuesta enfocada en prevencion, control, respuesta y presentacion profesional.</p>
+                    <p>Trabajamos con una propuesta enfocada en prevencion, control, respuesta y presentacion profesional.</p>
                     <ul class="list">
                         {% for capability in capabilities %}<li>{{ capability }}</li>{% endfor %}
                     </ul>
@@ -113,7 +91,7 @@
                 </div>
             </div>
 
-            <aside class="sidebar" id="tecnologia">
+            <aside class="sidebar">
                 <section class="sidebar-card">
                     <div class="label">Busqueda</div>
                     <p>Podemos convertir esta maqueta en un sitio institucional completo con formularios y panel de administracion en Django.</p>
@@ -124,7 +102,7 @@
                         <p><strong>{{ metric.value }}</strong> {{ metric.label }}</p>
                     {% endfor %}
                 </section>
-                <section class="cta" id="contacto">
+                <section class="cta">
                     <h2>Coordinemos tu cobertura</h2>
                     <p>Desde vigilancia fija hasta custodia especializada y monitoreo tecnologico, armamos una propuesta a medida con foco operativo.</p>
                     <a class="btn" href="mailto:contacto@bucam.local">Contactar ahora</a>
@@ -132,5 +110,4 @@
             </aside>
         </section>
     </main>
-</body>
-</html>
+{% endblock %}

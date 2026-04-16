@@ -29,7 +29,7 @@ class HomeViewTests(TestCase):
 
     def test_post_detail_renders_published_post(self):
         post = Post.objects.create(
-            title='Monitoreo estratégico',
+            title='Monitoreo estrategico',
             excerpt='Resumen del monitoreo.',
             body='Contenido de detalle del post.',
             published_at=timezone.now(),
@@ -39,3 +39,17 @@ class HomeViewTests(TestCase):
 
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, 'Contenido de detalle del post.')
+
+    def test_navbar_pages_render_successfully(self):
+        pages = [
+            ('core:mission', 'Mision y vision'),
+            ('core:about', 'Quienes somos'),
+            ('core:services', 'Servicios'),
+            ('core:technology', 'Tecnologia'),
+        ]
+
+        for url_name, label in pages:
+            with self.subTest(page=url_name):
+                response = self.client.get(reverse(url_name))
+                self.assertEqual(response.status_code, 200)
+                self.assertContains(response, label)
