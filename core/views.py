@@ -1,4 +1,6 @@
+from django.core.paginator import Paginator
 from django.shortcuts import get_object_or_404, render
+from django.conf import settings
 from django.utils import timezone
 
 from .models import Post
@@ -17,80 +19,84 @@ INFO_PAGES = {
     'mission': {
         'title': 'Mision y vision',
         'eyebrow': 'Direccion institucional',
-        'intro': 'Trabajamos para ofrecer cobertura profesional, presencia operativa y procesos claros que den confianza desde el primer contacto.',
-        'lead': 'Nuestra mision es prevenir riesgos y responder con rapidez. Nuestra vision es consolidar una empresa de seguridad privada confiable, moderna y adaptable a cada operacion.',
+        'intro': 'Protegemos lo que mas importa.',
+        'lead': 'En BUCAM S.R.L. trabajamos con el firme proposito de brindar servicios integrales de seguridad fisica, electronica y digital, orientados a la proteccion de personas, bienes e instituciones, bajo los mas altos estandares de legalidad, profesionalismo y compromiso etico.',
         'sections': [
             {
                 'title': 'Mision',
-                'body': 'Brindar servicios de seguridad privada con personal capacitado, seguimiento continuo y protocolos concretos para personas, instalaciones y operaciones sensibles.',
+                'body': 'Nuestra mision es ofrecer soluciones confiables y personalizadas que garanticen tranquilidad, prevencion y resguardo, a traves de un equipo humano capacitado y de la incorporacion constante de tecnologia de vanguardia.',
             },
             {
                 'title': 'Vision',
-                'body': 'Ser una referencia regional en proteccion integral, combinando factor humano, supervision cercana y tecnologia para anticipar incidentes y mejorar resultados.',
-            },
-            {
-                'title': 'Compromisos',
-                'body': 'Priorizamos la prevencion, la comunicacion con el cliente, la presencia profesional y la mejora operativa constante en cada servicio contratado.',
+                'body': 'Nuestra vision es consolidarnos como una empresa lider en seguridad privada en la Argentina, reconocida por su capacidad de respuesta, su responsabilidad social y su enfoque preventivo, innovador y humano.',
             },
         ],
     },
     'about': {
         'title': 'Quienes somos',
         'eyebrow': 'Identidad BUCAM',
-        'intro': 'BUCAM S.R.L. desarrolla soluciones de seguridad privada con enfoque operativo, atencion personalizada y una presentacion institucional sobria.',
-        'lead': 'Somos un equipo orientado a la prevencion, el control de accesos, la custodia especializada y la coordinacion de coberturas segun el nivel de riesgo de cada cliente.',
+        'intro': 'Comprometidos con tu seguridad.',
+        'lead': 'BUCAM S.R.L. es una empresa legalmente habilitada, con sede en la Provincia de Jujuy y cobertura en todo el territorio nacional. Nos especializamos en brindar servicios de seguridad privada, custodia de personas y bienes, videovigilancia y soluciones tecnologicas, tanto para el sector publico como privado.',
         'sections': [
             {
-                'title': 'Perfil de la empresa',
-                'body': 'Acompanamos organizaciones, consorcios, eventos y operaciones ejecutivas con planes de cobertura claros, recursos asignados y seguimiento profesional.',
+                'title': 'Compromiso operativo',
+                'body': 'Nuestra mision es garantizar la proteccion integral mediante un enfoque profesional, etico y actualizado, que priorice la prevencion, la excelencia operativa y el respeto a los derechos fundamentales.',
             },
             {
-                'title': 'Forma de trabajo',
-                'body': 'Analizamos contexto, definimos puntos criticos, asignamos personal y establecemos protocolos de comunicacion para sostener una respuesta ordenada.',
-            },
-            {
-                'title': 'Valor diferencial',
-                'body': 'Combinamos trato directo, capacidad de adaptacion y foco en la imagen del servicio para representar correctamente a cada cliente en terreno.',
+                'title': 'Equipo y estructura',
+                'body': 'Contamos con un equipo humano calificado, en constante formacion, y una estructura organizativa solida, orientada a la mejora continua y a la construccion de vinculos de confianza con nuestros clientes.',
             },
         ],
     },
     'services': {
         'title': 'Servicios',
         'eyebrow': 'Coberturas disponibles',
-        'intro': 'Armamos propuestas a medida para vigilancia, custodia y monitoreo con presencia profesional y protocolos de accion.',
-        'lead': 'Cada servicio puede adaptarse al tipo de instalacion, cantidad de accesos, exposicion publica, horarios criticos y necesidades de reporte.',
+        'intro': 'Seguridad integral, adaptada a cada cliente.',
+        'lead': 'Brindamos soluciones de seguridad pensadas para distintos entornos operativos, combinando personal capacitado, vigilancia preventiva, monitoreo y asesoramiento especializado.',
         'sections': [
             {
-                'title': 'Vigilancia fisica',
-                'body': 'Cobertura fija para ingresos, recorridas, control perimetral y supervision de movimientos en plantas, edificios, comercios y predios.',
+                'title': 'Seguridad fisica y vigilancia',
+                'body': 'Personal capacitado para control de accesos, rondas preventivas, patrullajes, vigilancia en eventos y espacios publicos o privados.',
             },
             {
-                'title': 'Custodia especializada',
-                'body': 'Proteccion para ejecutivos, traslados, eventos y activos sensibles con evaluacion previa y coordinacion operativa.',
+                'title': 'Custodia de bienes y personas',
+                'body': 'Custodios especializados en traslados seguros, proteccion ejecutiva y resguardo de cargas o activos sensibles.',
             },
             {
-                'title': 'Control y recepcion',
-                'body': 'Puestos de acceso, control documental, acreditaciones, asistencia en recepciones y protocolos de ingreso y egreso.',
+                'title': 'Monitoreo y videovigilancia',
+                'body': 'Instalacion de camaras, alarmas, sensores y sistemas de seguridad electronica con monitoreo remoto y soporte tecnico.',
+            },
+            {
+                'title': 'Soluciones en ciberseguridad',
+                'body': 'Asesoramiento, implementacion y monitoreo de sistemas de proteccion digital para datos sensibles, redes y plataformas.',
+            },
+            {
+                'title': 'Asesoramiento tecnico y auditoria de riesgos',
+                'body': 'Relevamientos de seguridad, diseno de planes preventivos y formacion en normativas vigentes para empresas e instituciones.',
             },
         ],
     },
     'technology': {
         'title': 'Tecnologia',
         'eyebrow': 'Soporte tecnico',
-        'intro': 'La tecnologia complementa el trabajo en terreno con herramientas de monitoreo, registro y respuesta temprana.',
-        'lead': 'Integramos recursos que ayudan a detectar desvios, documentar incidentes y sostener una supervision continua segun el tipo de cobertura.',
+        'intro': 'Innovacion al servicio de la seguridad.',
+        'lead': 'En BUCAM integramos tecnologia de ultima generacion para garantizar prevencion, respuesta inmediata y control permanente. Todo nuestro equipamiento esta orientado a preservar la confidencialidad, privacidad y seguridad de nuestros clientes, bajo estrictos estandares tecnicos y legales.',
         'sections': [
             {
-                'title': 'Videovigilancia',
-                'body': 'Instalacion y seguimiento de camaras para puntos de acceso, perimetros, sectores criticos y respaldo visual de incidentes.',
+                'title': 'Videovigilancia inteligente',
+                'body': 'Implementamos camaras de seguridad IP y analogicas para control visual continuo, respaldo de incidentes y supervision de puntos criticos.',
             },
             {
-                'title': 'Control de accesos',
-                'body': 'Soluciones para administrar ingresos, registrar movimientos y reforzar protocolos en areas sensibles o de circulacion restringida.',
+                'title': 'Alarmas y control de accesos',
+                'body': 'Integramos alarmas con sensores de movimiento, humo y apertura, junto con sistemas de control de accesos para reforzar la proteccion de areas sensibles.',
             },
             {
-                'title': 'Monitoreo y reportes',
-                'body': 'Esquemas de observacion, alertas y consolidacion de novedades para mejorar tiempos de respuesta y trazabilidad operativa.',
+                'title': 'Monitoreo y gestion centralizada',
+                'body': 'Sumamos monitoreo remoto 24/7, plataformas de gestion de incidentes e infraestructura de conectividad segura para sostener un control permanente y una respuesta coordinada.',
+            },
+            {
+                'title': 'Ciberseguridad adaptable',
+                'body': 'Incorporamos servicios de ciberseguridad pensados para proteger datos, redes y plataformas segun las necesidades de cada entorno operativo.',
             },
         ],
     },
@@ -101,6 +107,7 @@ def get_shared_context(current_page):
     return {
         'nav_pages': NAV_PAGES,
         'current_page': current_page,
+        'brand_banner_url': f"{settings.MEDIA_URL}bucamBanner.png",
     }
 
 
@@ -109,8 +116,13 @@ def home(request):
         is_published=True,
         published_at__lte=timezone.now(),
     )
+    search_query = request.GET.get('q', '').strip()
+    if search_query:
+        posts = posts.filter(title__icontains=search_query)
     featured_posts = list(posts.filter(is_featured=True)[:5])
     recent_posts = list(posts[:6])
+    posts_paginator = Paginator(posts, 6)
+    posts_page = posts_paginator.get_page(request.GET.get('page'))
 
     fallback_services = [
         {
@@ -118,7 +130,7 @@ def home(request):
             'title': 'Custodia VIP con protocolos de respuesta inmediata',
             'description': 'Equipos entrenados para traslados, eventos, ejecutivos y proteccion de activos sensibles.',
             'tone': 'primary',
-            'image_url': '',
+            'banner_image_url': '',
             'published_at': None,
         },
         {
@@ -126,7 +138,7 @@ def home(request):
             'title': 'Custodia femenina con presencia profesional y vision integral',
             'description': 'Perfiles preparados para entornos corporativos, recepciones ejecutivas y acompanamiento estrategico.',
             'tone': 'secondary',
-            'image_url': '',
+            'banner_image_url': '',
             'published_at': None,
         },
         {
@@ -134,7 +146,7 @@ def home(request):
             'title': 'Videovigilancia e instalacion de tecnologia de control',
             'description': 'Disenamos, instalamos y supervisamos sistemas de CCTV, alarmas y puestos de monitoreo.',
             'tone': 'accent',
-            'image_url': '',
+            'banner_image_url': '',
             'published_at': None,
         },
     ]
@@ -175,6 +187,9 @@ def home(request):
         'capabilities': capabilities,
         'metrics': metrics,
         'recent_highlights': recent_posts or fallback_recent,
+        'ticker_items': recent_posts or fallback_recent,
+        'posts_page': posts_page,
+        'search_query': search_query,
     }
     context.update(get_shared_context('home'))
     return render(request, 'core/home.html', context)
@@ -195,7 +210,7 @@ def post_detail(request, slug):
         'post': post,
         'recent_posts': recent_posts,
     }
-    context.update(get_shared_context('services'))
+    context.update(get_shared_context(''))
     return render(request, 'core/post_detail.html', context)
 
 

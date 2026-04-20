@@ -2,22 +2,38 @@
 
 {% block title %}{{ page.title }} | BUCAM S.R.L.{% endblock %}
 
+{% block extra_css %}
+        .page-hero h1{font-size:clamp(2.2rem,4vw,3.8rem)}
+        .page-hero p{max-width:58ch}
+        .page-section h2{font-size:1.45rem}
+        {% if current_page == 'mission' or current_page == 'about' %}
+        .page-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+        {% endif %}
+{% endblock %}
+
 {% block ticker %}
-    <div class="shell ticker"><strong>{{ page.title }}</strong><span>{{ page.intro }}</span></div>
+    <div class="shell ticker"><strong><svg class="icon icon-sm"><use href="#icon-wave"></use></svg>{{ page.title }}</strong><span>{{ page.intro }}</span></div>
 {% endblock %}
 
 {% block content %}
     <main class="shell">
         <section class="page-hero">
-            <div class="eyebrow">{{ page.eyebrow }}</div>
+            <div class="eyebrow"><svg class="icon icon-sm"><use href="#icon-target"></use></svg>{{ page.eyebrow }}</div>
             <h1>{{ page.title }}</h1>
             <p>{{ page.lead }}</p>
-            <a class="btn" href="mailto:contacto@bucam.local">Solicitar informacion</a>
+            <a class="btn" href="mailto:contacto@bucam.local"><svg class="icon icon-sm"><use href="#icon-mail"></use></svg>Solicitar informacion</a>
         </section>
 
         <section class="page-grid">
             {% for section in page.sections %}
                 <article class="page-section">
+                    <div class="eyebrow">
+                        {% if current_page == 'mission' %}<svg class="icon icon-sm"><use href="#icon-target"></use></svg>{% endif %}
+                        {% if current_page == 'about' %}<svg class="icon icon-sm"><use href="#icon-users"></use></svg>{% endif %}
+                        {% if current_page == 'services' %}<svg class="icon icon-sm"><use href="#icon-briefcase"></use></svg>{% endif %}
+                        {% if current_page == 'technology' %}<svg class="icon icon-sm"><use href="#icon-network"></use></svg>{% endif %}
+                        BUCAM
+                    </div>
                     <h2>{{ section.title }}</h2>
                     <p>{{ section.body }}</p>
                 </article>

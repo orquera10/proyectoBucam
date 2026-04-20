@@ -4,39 +4,135 @@
 
 {% block extra_css %}
         .detail-topbar{padding:24px 0 16px}
-        .back{display:inline-flex;padding:10px 14px;border:1px solid var(--line);border-radius:999px;color:var(--muted)}
-        .hero{min-height:380px;padding:36px;display:flex;align-items:end;background:linear-gradient(180deg,rgba(2,6,10,.08),rgba(2,6,10,.86)),linear-gradient(135deg,rgba(12,54,86,.78),rgba(16,16,16,.8));background-size:cover;background-position:center;box-shadow:var(--shadow)}
-        h1,h2,h3,p{margin-top:0} h1{font-size:clamp(2.4rem,5vw,4.4rem);margin-bottom:14px}
-        .excerpt,.body,.recent-item span{color:#dbe1ea;line-height:1.8}
-        .meta{display:flex;gap:16px;flex-wrap:wrap;margin-top:16px;color:#98a3b1}.layout{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(280px,.75fr);gap:28px;padding:28px 0 42px}
-        .article,.sidebar-card{box-shadow:var(--shadow);padding:24px}
-        .sidebar{display:grid;gap:20px}.recent-list{display:grid;gap:14px}.recent-item{display:block;padding:16px;background:var(--panel2)}
-        .recent-item strong{display:block;margin-bottom:8px}
-        @media (max-width:900px){.layout{grid-template-columns:1fr}.hero{padding:24px}}
+        .back{
+            display:inline-flex;
+            align-items:center;
+            gap:10px;
+            padding:12px 16px;
+            border:1px solid var(--line);
+            border-radius:999px;
+            color:#dce9ef;
+            background:rgba(255,255,255,.04);
+            backdrop-filter:blur(12px);
+        }
+        .hero{
+            min-height:420px;
+            padding:40px;
+            display:flex;
+            align-items:end;
+            overflow:hidden;
+            border:none;
+            border-radius:var(--radius-xl);
+            background:
+                radial-gradient(circle at top right, rgba(72,169,255,.18), transparent 26%),
+                linear-gradient(180deg,rgba(2,6,10,.1),rgba(2,6,10,.82)),
+                linear-gradient(135deg,rgba(12,54,86,.68),rgba(16,16,16,.84));
+            background-size:cover;
+            background-position:center;
+            box-shadow:var(--shadow), inset 0 0 0 1px rgba(255,255,255,.05);
+        }
+        h1,h2,h3,p{margin-top:0}
+        .hero h1{
+            font-size:clamp(1.45rem,2.6vw,2.45rem);
+            max-width:16ch;
+            line-height:1.04;
+            text-wrap:balance;
+        }
+        .excerpt,.body,.recent-item span{color:#d7e4ea;line-height:1.8}
+        .meta{display:flex;gap:16px;flex-wrap:wrap;margin-top:18px;color:#a9bcc6}
+        .layout{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(280px,.75fr);gap:28px;padding:28px 0 42px}
+        .article,.sidebar-card{padding:28px}
+        .body-media{
+            overflow:hidden;
+            margin:0 auto 24px;
+            max-width:780px;
+            border:1px solid var(--line);
+            border-radius:22px;
+            background:rgba(255,255,255,.03);
+        }
+        .body-media img{
+            display:block;
+            width:100%;
+            height:auto;
+        }
+        .body{
+            display:grid;
+            gap:18px;
+        }
+        .body h3{
+            margin:10px 0 0;
+            color:#f3f7f9;
+            font-size:clamp(1.15rem,1.7vw,1.45rem);
+            line-height:1.2;
+            text-transform:none;
+            letter-spacing:0;
+        }
+        .body p{
+            margin:0;
+            color:#d7e4ea;
+            line-height:1.9;
+        }
+        .body ul{
+            margin:0;
+            padding-left:22px;
+            color:#d7e4ea;
+        }
+        .body li{
+            margin-bottom:10px;
+            line-height:1.85;
+        }
+        .sidebar{display:grid;gap:20px}
+        .recent-list{display:grid;gap:14px}
+        .recent-item{
+            display:block;
+            padding:18px;
+            background:rgba(255,255,255,.03);
+            transition:transform .2s ease,border-color .2s ease;
+        }
+        .recent-item:hover{transform:translateY(-2px);border-color:var(--line-strong)}
+        .recent-item strong{display:block;margin-bottom:8px;color:#fff}
+        @media (max-width:900px){.layout{grid-template-columns:1fr}.hero{padding:28px}}
 {% endblock %}
 
 {% block content %}
-    <div class="shell detail-topbar"><a class="back" href="{% url 'core:services' %}">&larr; Volver a servicios</a></div>
     <main class="shell">
-        <section class="hero"{% if post.image_url %} style="background-image:linear-gradient(180deg,rgba(2,6,10,.08),rgba(2,6,10,.86)),url('{{ post.image_url }}');"{% endif %}>
+        <section class="hero" style="margin-top:18px;{% if post.banner_image_url %}background-image:radial-gradient(circle at top right, rgba(72,169,255,.18), transparent 26%),linear-gradient(180deg,rgba(2,6,10,.1),rgba(2,6,10,.82)),url('{{ post.banner_image_url }}');{% endif %}">
             <div>
-                {% if post.eyebrow %}<div class="eyebrow">{{ post.eyebrow }}</div>{% endif %}
+                {% if post.eyebrow %}<div class="eyebrow"><svg class="icon icon-sm"><use href="#icon-shield"></use></svg>{{ post.eyebrow }}</div>{% endif %}
                 <h1>{{ post.title }}</h1>
                 <p class="excerpt">{{ post.excerpt }}</p>
                 <div class="meta">
-                    <span>Publicado el {{ post.published_at|date:"j \\d\\e F, Y" }}</span>
-                    <span>Tono {{ post.get_tone_display }}</span>
+                    <span><svg class="icon icon-sm"><use href="#icon-calendar"></use></svg>Publicado el {{ post.published_at|date:"j \\d\\e F, Y" }}</span>
                 </div>
             </div>
         </section>
         <section class="layout">
             <article class="article">
-                <h2>Detalle</h2>
-                <div class="body">{{ post.body|default:post.excerpt }}</div>
+                <div class="label"><svg class="icon icon-sm"><use href="#icon-folder"></use></svg>Detalle</div>
+                {% if post.body_image_url %}
+                    <figure class="body-media">
+                        <img src="{{ post.body_image_url }}" alt="{{ post.title }}">
+                    </figure>
+                {% endif %}
+                <div class="body">
+                    {% for block in post.body_blocks %}
+                        {% if block.type == 'heading' %}
+                            <h3>{{ block.text }}</h3>
+                        {% elif block.type == 'list' %}
+                            <ul>
+                                {% for item in block.items %}
+                                    <li>{{ item }}</li>
+                                {% endfor %}
+                            </ul>
+                        {% else %}
+                            <p>{{ block.text }}</p>
+                        {% endif %}
+                    {% endfor %}
+                </div>
             </article>
             <aside class="sidebar">
                 <section class="sidebar-card">
-                    <h2>Mas entradas</h2>
+                    <div class="label"><svg class="icon icon-sm"><use href="#icon-briefcase"></use></svg>Mas entradas</div>
                     <div class="recent-list">
                         {% for item in recent_posts %}
                             <a class="recent-item" href="{{ item.get_absolute_url }}">

@@ -17,3 +17,36 @@ class PostAdmin(admin.ModelAdmin):
     prepopulated_fields = {'slug': ('title',)}
     ordering = ('-published_at', '-created_at')
     readonly_fields = ('created_at', 'updated_at')
+    fieldsets = (
+        (
+            None,
+            {
+                'fields': (
+                    'title',
+                    'slug',
+                    'eyebrow',
+                    'excerpt',
+                    'body',
+                    'banner_image',
+                    'body_image',
+                ),
+            },
+        ),
+        (
+            'Publicacion',
+            {
+                'fields': (
+                    'tone',
+                    'is_featured',
+                    'is_published',
+                    'published_at',
+                ),
+            },
+        ),
+        (
+            'Sistema',
+            {
+                'fields': ('created_at', 'updated_at'),
+            },
+        ),
+    )

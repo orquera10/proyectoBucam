@@ -5,40 +5,637 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}BUCAM S.R.L. | Seguridad Privada{% endblock %}</title>
     <style>
-        :root{--bg:#111;--panel:#1a1a1a;--panel2:#222;--ink:#f5f7fb;--muted:#a5acb8;--line:rgba(255,255,255,.08);--brand:#16b7d6;--shadow:0 28px 60px rgba(0,0,0,.35)}
-        *{box-sizing:border-box} body{margin:0;background:linear-gradient(180deg,#121212 0%,#0d0d0d 100%);color:var(--ink);font-family:Segoe UI,Tahoma,Geneva,Verdana,sans-serif}
-        a{color:inherit;text-decoration:none} .shell{width:min(1180px,calc(100% - 32px));margin:0 auto}
-        .top{margin:18px auto 0;padding:28px 24px;text-align:center;background:linear-gradient(135deg,rgba(255,255,255,.92),rgba(236,238,243,.92));color:#0c3656}
-        .top h1{margin:0;font:700 clamp(2rem,4vw,3.2rem) Georgia,serif}.top p{margin:8px 0 0;font-style:italic}
-        .nav,.ticker,.card,.section,.sidebar-card,.cta,.detail-card,.page-hero,.page-section,.recent-item,.article{border:1px solid var(--line);background:var(--panel)}
-        .nav{margin-top:24px}.nav-inner,.ticker{display:flex;gap:14px;align-items:center;flex-wrap:wrap;padding:16px 18px}
-        .nav a{font:700 1rem "Arial Narrow","Bahnschrift SemiCondensed",sans-serif;text-transform:uppercase;padding:8px 10px;border-radius:999px}
-        .nav a:hover,.nav a.is-active,.btn{background:var(--brand);color:#00161d}.ticker{margin-top:10px;color:var(--muted)}
-        h1,h2,h3{margin:0 0 10px;font-family:"Arial Narrow","Bahnschrift SemiCondensed",sans-serif;text-transform:uppercase;line-height:1.1}
-        .page-hero{margin-top:28px;padding:36px;background:linear-gradient(135deg,rgba(12,54,86,.82),rgba(16,16,16,.9));box-shadow:var(--shadow)}
-        .eyebrow,.label{display:inline-block;padding:8px 12px;margin-bottom:14px;background:rgba(0,0,0,.35);border:1px solid rgba(255,255,255,.08);color:#d7f8ff;text-transform:uppercase;font-size:.78rem}
-        .btn{display:inline-block;padding:12px 16px;border-radius:999px;font-weight:700;margin-top:14px}
-        .page-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;padding:28px 0 42px}
-        .page-section{padding:24px;box-shadow:var(--shadow)} .page-section p,.page-hero p,.section p,.sidebar-card p,.card p,.article,.recent-item{color:var(--muted);line-height:1.7}
-        .footer-space{height:24px}
-        @media (max-width:980px){.page-grid{grid-template-columns:1fr}}
+        :root{
+            --bg:#071116;
+            --bg-deep:#03070c;
+            --panel:rgba(9,21,28,.78);
+            --panel-strong:rgba(8,18,24,.92);
+            --panel-soft:rgba(16,31,40,.75);
+            --ink:#f3f7f9;
+            --muted:#9cb0bb;
+            --line:rgba(156,210,231,.14);
+            --line-strong:rgba(156,210,231,.28);
+            --brand:#6ee7d2;
+            --brand-2:#48a9ff;
+            --accent:#f7b267;
+            --shadow:0 28px 90px rgba(0,0,0,.34);
+            --radius-xl:32px;
+            --radius-lg:24px;
+            --radius-md:18px;
+            --radius-sm:12px;
+        }
+        *{box-sizing:border-box}
+        html{scroll-behavior:smooth}
+        body{
+            margin:0;
+            color:var(--ink);
+            font-family:"Segoe UI Variable Text","Trebuchet MS","Segoe UI",sans-serif;
+            background:
+                radial-gradient(circle at top left, rgba(72,169,255,.18), transparent 28%),
+                radial-gradient(circle at 85% 12%, rgba(110,231,210,.14), transparent 24%),
+                radial-gradient(circle at bottom right, rgba(247,178,103,.10), transparent 24%),
+                linear-gradient(180deg, #091319 0%, var(--bg) 45%, var(--bg-deep) 100%);
+            min-height:100vh;
+            overflow-x:hidden;
+        }
+        body::before,
+        body::after{
+            content:"";
+            position:fixed;
+            inset:auto;
+            pointer-events:none;
+            z-index:-1;
+            border-radius:999px;
+            filter:blur(18px);
+            opacity:.75;
+        }
+        body::before{
+            width:340px;
+            height:340px;
+            top:90px;
+            left:-90px;
+            background:radial-gradient(circle, rgba(72,169,255,.18), transparent 68%);
+        }
+        body::after{
+            width:420px;
+            height:420px;
+            right:-140px;
+            bottom:0;
+            background:radial-gradient(circle, rgba(110,231,210,.12), transparent 70%);
+        }
+        a{color:inherit;text-decoration:none}
+        .shell{width:min(1180px,calc(100% - 32px));margin:0 auto}
+        .top{
+            position:relative;
+            margin:18px auto 0;
+            min-height:250px;
+            padding:0;
+            overflow:hidden;
+            border:1px solid var(--line);
+            border-radius:var(--radius-xl);
+            background-image:url('{{ brand_banner_url }}');
+            background-size:cover;
+            background-position:center;
+            box-shadow:var(--shadow);
+            animation:rise .7s ease both;
+        }
+        .top::before{
+            content:"";
+            position:absolute;
+            inset:0;
+            background:transparent;
+            opacity:0;
+            pointer-events:none;
+        }
+        .top-inner{display:none}
+        .brand-kicker{
+            display:inline-flex;
+            align-items:center;
+            gap:10px;
+            padding:7px 12px;
+            margin-bottom:16px;
+            border:1px solid var(--line-strong);
+            border-radius:999px;
+            background:rgba(255,255,255,.04);
+            color:#d7f4ff;
+            text-transform:uppercase;
+            letter-spacing:.16em;
+            font:600 .73rem "Bahnschrift SemiBold","Segoe UI Variable Display","Trebuchet MS",sans-serif;
+        }
+        .icon{width:1.1rem;height:1.1rem;display:inline-block;flex:0 0 auto;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+        .icon-sm{width:.95rem;height:.95rem}
+        .icon-lg{width:1.3rem;height:1.3rem}
+        .icon-chip{
+            display:inline-flex;
+            align-items:center;
+            justify-content:center;
+            width:34px;
+            height:34px;
+            border:1px solid var(--line-strong);
+            border-radius:12px;
+            background:rgba(255,255,255,.06);
+            color:#dffaff;
+        }
+        .top h1{
+            margin:0;
+            font:700 clamp(2.5rem,5vw,4.7rem) "Bahnschrift SemiBold","Arial Narrow","Segoe UI Variable Display",sans-serif;
+            line-height:.95;
+            letter-spacing:.02em;
+            text-transform:uppercase;
+        }
+        .top p{
+            max-width:52ch;
+            margin:14px 0 0;
+            color:#c4d5de;
+            font-size:1.03rem;
+            line-height:1.7;
+        }
+        .top-stats{
+            display:grid;
+            grid-template-columns:repeat(3,minmax(180px,1fr));
+            grid-auto-rows:1fr;
+            align-items:stretch;
+            gap:16px;
+            align-self:stretch;
+        }
+        .top-stat{
+            display:flex;
+            flex-direction:column;
+            align-items:center;
+            justify-content:flex-start;
+            gap:14px;
+            min-height:100%;
+            height:100%;
+            padding:22px 22px 20px;
+            text-align:center;
+            border:1px solid var(--line);
+            border-radius:20px;
+            background:rgba(255,255,255,.04);
+            backdrop-filter:blur(12px);
+        }
+        .top-stat-head{
+            display:flex;
+            flex-direction:column;
+            align-items:center;
+            justify-content:center;
+            gap:14px;
+            width:100%;
+        }
+        .top-stat-icon{
+            display:inline-flex;
+            align-items:center;
+            justify-content:center;
+            width:48px;
+            height:48px;
+            border-radius:14px;
+            background:linear-gradient(135deg, rgba(110,231,210,.16), rgba(72,169,255,.18));
+            color:#ebfdff;
+        }
+        .top-stat-copy{
+            display:flex;
+            flex-direction:column;
+            gap:8px;
+            align-items:center;
+            min-width:0;
+            width:100%;
+        }
+        .top-stat strong{
+            display:block;
+            margin:0;
+            font:700 clamp(1.2rem,1.35vw,1.5rem) "Bahnschrift SemiBold","Arial Narrow",sans-serif;
+            color:#fff;
+            line-height:1.05;
+        }
+        .top-stat span{
+            color:var(--muted);
+            font-size:.92rem;
+            line-height:1.5;
+            max-width:20ch;
+            margin:0 auto;
+        }
+        .nav{
+            position:sticky;
+            top:12px;
+            z-index:20;
+            margin-top:12px;
+            border:1px solid var(--line);
+            border-radius:20px;
+            background:rgba(5,12,18,.78);
+            backdrop-filter:blur(18px);
+            box-shadow:0 18px 55px rgba(0,0,0,.22);
+            animation:rise .85s ease both;
+        }
+        .nav-bar{
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            gap:12px;
+            padding:8px 12px 4px;
+        }
+        .nav-brand{
+            display:none;
+            align-items:center;
+            gap:10px;
+            color:#effaff;
+            font:700 .88rem "Bahnschrift SemiBold","Arial Narrow",sans-serif;
+            text-transform:uppercase;
+            letter-spacing:.12em;
+        }
+        .nav-toggle{
+            display:none;
+            align-items:center;
+            justify-content:center;
+            width:40px;
+            height:40px;
+            border:1px solid var(--line);
+            border-radius:12px;
+            background:rgba(255,255,255,.04);
+            color:#effaff;
+            cursor:pointer;
+        }
+        .nav-toggle svg{pointer-events:none}
+        .nav-toggle:focus-visible{
+            outline:2px solid rgba(110,231,210,.55);
+            outline-offset:3px;
+        }
+        .nav-inner,.ticker{display:flex;gap:12px;align-items:center;flex-wrap:wrap;padding:12px 14px}
+        .nav-inner{
+            justify-content:center;
+            padding:4px 12px 10px;
+        }
+        .nav a{
+            position:relative;
+            display:inline-flex;
+            align-items:center;
+            justify-content:center;
+            gap:8px;
+            min-height:38px;
+            padding:8px 14px;
+            border:1px solid rgba(255,255,255,.03);
+            border-radius:999px;
+            color:#dbe7ed;
+            font:700 .88rem "Bahnschrift SemiBold","Arial Narrow","Segoe UI Variable Display",sans-serif;
+            text-transform:uppercase;
+            letter-spacing:.04em;
+            transition:transform .2s ease, background .25s ease, border-color .25s ease, color .25s ease, box-shadow .25s ease;
+        }
+        .nav a:hover,
+        .nav a.is-active{
+            color:#04141b;
+            background:linear-gradient(135deg,var(--brand),#8be4ff);
+            border-color:rgba(255,255,255,.2);
+            box-shadow:0 10px 24px rgba(72,169,255,.2);
+            transform:translateY(-1px);
+        }
+        .ticker{
+            margin-top:14px;
+            border:1px solid var(--line);
+            border-radius:20px;
+            background:linear-gradient(135deg, rgba(72,169,255,.08), rgba(110,231,210,.08)), var(--panel);
+            color:var(--muted);
+            animation:rise 1s ease both;
+        }
+        .ticker strong{
+            display:inline-flex;
+            align-items:center;
+            gap:10px;
+            color:#effaff;
+            font:700 .9rem "Bahnschrift SemiBold","Arial Narrow",sans-serif;
+            text-transform:uppercase;
+            letter-spacing:.12em;
+        }
+        .card,.section,.sidebar-card,.cta,.detail-card,.page-hero,.page-section,.recent-item,.article{
+            border:1px solid var(--line);
+            background:var(--panel);
+            backdrop-filter:blur(18px);
+            border-radius:var(--radius-lg);
+            box-shadow:var(--shadow);
+        }
+        h1,h2,h3{
+            margin:0 0 12px;
+            font-family:"Bahnschrift SemiBold","Arial Narrow","Segoe UI Variable Display",sans-serif;
+            text-transform:uppercase;
+            line-height:1;
+            letter-spacing:.02em;
+        }
+        .eyebrow,.label{
+            display:inline-flex;
+            align-items:center;
+            gap:10px;
+            padding:9px 14px;
+            margin-bottom:16px;
+            border:1px solid rgba(255,255,255,.14);
+            border-radius:999px;
+            background:rgba(255,255,255,.05);
+            color:#dffaff;
+            text-transform:uppercase;
+            letter-spacing:.14em;
+            font:700 .73rem "Bahnschrift SemiBold","Arial Narrow",sans-serif;
+        }
+        .btn{
+            display:inline-flex;
+            align-items:center;
+            justify-content:center;
+            gap:10px;
+            padding:13px 18px;
+            margin-top:16px;
+            border:1px solid rgba(255,255,255,.16);
+            border-radius:999px;
+            background:linear-gradient(135deg,var(--brand),#8be4ff);
+            color:#031119;
+            font:700 .95rem "Bahnschrift SemiBold","Arial Narrow",sans-serif;
+            letter-spacing:.04em;
+            text-transform:uppercase;
+            transition:transform .2s ease, box-shadow .25s ease;
+        }
+        .btn:hover{transform:translateY(-2px);box-shadow:0 16px 35px rgba(72,169,255,.24)}
+        .page-hero{
+            position:relative;
+            overflow:hidden;
+            margin-top:28px;
+            padding:42px;
+            background:
+                radial-gradient(circle at top right, rgba(72,169,255,.2), transparent 30%),
+                linear-gradient(135deg, rgba(110,231,210,.08), rgba(72,169,255,.1) 42%, rgba(7,17,22,.92) 100%);
+        }
+        .page-hero::after{
+            content:"";
+            position:absolute;
+            inset:auto -80px -80px auto;
+            width:240px;
+            height:240px;
+            border-radius:50%;
+            background:radial-gradient(circle, rgba(110,231,210,.16), transparent 70%);
+        }
+        .page-hero p,.section p,.sidebar-card p,.card p,.article,.recent-item,.page-section p{
+            color:var(--muted);
+            line-height:1.75;
+        }
+        .page-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;padding:28px 0 42px}
+        .page-section{
+            position:relative;
+            padding:28px;
+            transition:transform .22s ease,border-color .22s ease,background .22s ease;
+        }
+        .page-section:hover{
+            transform:translateY(-4px);
+            border-color:var(--line-strong);
+            background:var(--panel-soft);
+        }
+        .contact-band{
+            width:min(1180px,calc(100% - 32px));
+            margin:22px auto 0;
+            padding:24px;
+            border:1px solid var(--line);
+            border-radius:24px;
+            background:
+                radial-gradient(circle at top right, rgba(72,169,255,.14), transparent 30%),
+                linear-gradient(135deg, rgba(110,231,210,.08), rgba(5,12,18,.92));
+            box-shadow:var(--shadow);
+        }
+        .contact-grid{
+            display:grid;
+            grid-template-columns:1.1fr .9fr;
+            gap:22px;
+            align-items:start;
+        }
+        .contact-band h2{
+            margin:0 0 12px;
+            font-size:clamp(1.35rem,2.2vw,2rem);
+        }
+        .contact-band p{
+            margin:0;
+            color:var(--muted);
+            line-height:1.75;
+        }
+        .contact-actions{
+            display:flex;
+            flex-wrap:wrap;
+            gap:10px;
+            margin-top:18px;
+        }
+        .contact-pill{
+            display:inline-flex;
+            align-items:center;
+            gap:10px;
+            min-height:42px;
+            padding:10px 14px;
+            border:1px solid var(--line);
+            border-radius:999px;
+            background:rgba(255,255,255,.04);
+            color:#e8f5fa;
+        }
+        .social-grid{
+            display:grid;
+            grid-template-columns:repeat(2,minmax(0,1fr));
+            gap:12px;
+        }
+        .social-card{
+            display:flex;
+            align-items:center;
+            gap:12px;
+            min-height:74px;
+            padding:14px 16px;
+            border:1px solid var(--line);
+            border-radius:18px;
+            background:rgba(255,255,255,.04);
+        }
+        .social-card strong{
+            display:block;
+            margin-bottom:4px;
+            color:#f3f7f9;
+            font-size:.95rem;
+        }
+        .social-card span{
+            color:var(--muted);
+            font-size:.88rem;
+            line-height:1.5;
+        }
+        .site-footer{
+            width:min(1180px,calc(100% - 32px));
+            margin:18px auto 28px;
+            padding:18px 20px;
+            border:1px solid var(--line);
+            border-radius:18px;
+            background:rgba(5,12,18,.62);
+            color:var(--muted);
+            text-align:center;
+            font-size:.92rem;
+        }
+        @keyframes rise{
+            from{opacity:0;transform:translateY(18px)}
+            to{opacity:1;transform:translateY(0)}
+        }
+        @media (max-width:980px){
+            .top-inner,.page-grid{grid-template-columns:1fr}
+            .top-stats{grid-template-columns:1fr}
+            .nav{border-radius:18px}
+            .contact-grid,.social-grid{grid-template-columns:1fr}
+        }
+        @media (max-width:720px){
+            .shell{width:min(100% - 20px,1180px)}
+            .nav.shell{width:min(100% - 20px,1180px)}
+            .top{min-height:220px}
+            .top-stat span{max-width:none}
+            .nav-bar{
+                justify-content:space-between;
+                padding:10px;
+            }
+            .nav-brand,.nav-toggle{display:inline-flex}
+            .nav-inner{
+                display:none;
+                flex-direction:column;
+                align-items:stretch;
+                gap:8px;
+                padding:0 10px 10px;
+            }
+            .nav.is-open .nav-inner{display:flex}
+            .nav a{
+                width:100%;
+                justify-content:center;
+                text-align:center;
+            }
+            .page-hero{padding:28px 22px}
+        }
         {% block extra_css %}{% endblock %}
     </style>
 </head>
 <body>
-    <header class="shell top">
-        <h1>BUCAM S.R.L.</h1>
-        <p>Seguridad Privada &amp; Proteccion Integral</p>
-    </header>
-    <nav class="shell nav">
-        <div class="nav-inner">
+    <svg width="0" height="0" style="position:absolute">
+        <symbol id="icon-shield" viewBox="0 0 24 24">
+            <path d="M12 3l7 3v6c0 4.5-2.9 7.9-7 9-4.1-1.1-7-4.5-7-9V6l7-3z"></path>
+            <path d="M9.5 12l1.7 1.7L14.8 10"></path>
+        </symbol>
+        <symbol id="icon-bolt" viewBox="0 0 24 24">
+            <path d="M13 2L6 13h5l-1 9 8-12h-5l0-8z"></path>
+        </symbol>
+        <symbol id="icon-cpu" viewBox="0 0 24 24">
+            <path d="M9 4h6v2h3a2 2 0 0 1 2 2v3h2v2h-2v3a2 2 0 0 1-2 2h-3v2H9v-2H6a2 2 0 0 1-2-2v-3H2v-2h2V8a2 2 0 0 1 2-2h3V4z"></path>
+            <rect x="8" y="8" width="8" height="8" rx="1"></rect>
+        </symbol>
+        <symbol id="icon-home" viewBox="0 0 24 24">
+            <path d="M3 11.5L12 4l9 7.5"></path>
+            <path d="M5 10.5V20h14v-9.5"></path>
+        </symbol>
+        <symbol id="icon-target" viewBox="0 0 24 24">
+            <circle cx="12" cy="12" r="7"></circle>
+            <circle cx="12" cy="12" r="3"></circle>
+            <path d="M12 2v3M22 12h-3M12 22v-3M2 12h3"></path>
+        </symbol>
+        <symbol id="icon-users" viewBox="0 0 24 24">
+            <path d="M16 19v-1a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v1"></path>
+            <circle cx="9.5" cy="8" r="3"></circle>
+            <path d="M22 19v-1a4 4 0 0 0-3-3.87"></path>
+            <path d="M16 4.13a3 3 0 0 1 0 5.74"></path>
+        </symbol>
+        <symbol id="icon-briefcase" viewBox="0 0 24 24">
+            <path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+            <rect x="3" y="7" width="18" height="13" rx="2"></rect>
+            <path d="M3 12h18"></path>
+        </symbol>
+        <symbol id="icon-network" viewBox="0 0 24 24">
+            <rect x="10" y="3" width="4" height="4" rx="1"></rect>
+            <rect x="4" y="17" width="4" height="4" rx="1"></rect>
+            <rect x="16" y="17" width="4" height="4" rx="1"></rect>
+            <path d="M12 7v4M12 11H6v6M12 11h6v6"></path>
+        </symbol>
+        <symbol id="icon-wave" viewBox="0 0 24 24">
+            <path d="M2 12c2 0 2-4 4-4s2 8 4 8 2-8 4-8 2 4 4 4 2-2 4-2"></path>
+        </symbol>
+        <symbol id="icon-mail" viewBox="0 0 24 24">
+            <rect x="3" y="5" width="18" height="14" rx="2"></rect>
+            <path d="M4 7l8 6 8-6"></path>
+        </symbol>
+        <symbol id="icon-arrow-right" viewBox="0 0 24 24">
+            <path d="M5 12h14"></path>
+            <path d="M13 6l6 6-6 6"></path>
+        </symbol>
+        <symbol id="icon-calendar" viewBox="0 0 24 24">
+            <rect x="3" y="5" width="18" height="16" rx="2"></rect>
+            <path d="M8 3v4M16 3v4M3 10h18"></path>
+        </symbol>
+        <symbol id="icon-folder" viewBox="0 0 24 24">
+            <path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7z"></path>
+        </symbol>
+        <symbol id="icon-menu" viewBox="0 0 24 24">
+            <path d="M4 7h16"></path>
+            <path d="M4 12h16"></path>
+            <path d="M4 17h16"></path>
+        </symbol>
+    </svg>
+    <header class="shell top" aria-label="Cobertura integral"></header>
+    <nav class="shell nav" data-nav>
+        <div class="nav-bar">
+            <div class="nav-brand"><svg class="icon icon-sm"><use href="#icon-shield"></use></svg>Menu</div>
+            <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav-links" aria-label="Abrir menu" data-nav-toggle>
+                <svg class="icon"><use href="#icon-menu"></use></svg>
+            </button>
+        </div>
+        <div class="nav-inner" id="site-nav-links">
             {% for item in nav_pages %}
-                <a href="{% url item.url_name %}"{% if current_page == item.slug %} class="is-active"{% endif %}>{{ item.title }}</a>
+                <a href="{% url item.url_name %}"{% if current_page == item.slug %} class="is-active"{% endif %}>
+                    {% if item.slug == 'home' %}<svg class="icon icon-sm"><use href="#icon-home"></use></svg>{% endif %}
+                    {% if item.slug == 'mission' %}<svg class="icon icon-sm"><use href="#icon-target"></use></svg>{% endif %}
+                    {% if item.slug == 'about' %}<svg class="icon icon-sm"><use href="#icon-users"></use></svg>{% endif %}
+                    {% if item.slug == 'services' %}<svg class="icon icon-sm"><use href="#icon-briefcase"></use></svg>{% endif %}
+                    {% if item.slug == 'technology' %}<svg class="icon icon-sm"><use href="#icon-network"></use></svg>{% endif %}
+                    {{ item.title }}
+                </a>
             {% endfor %}
         </div>
     </nav>
     {% block ticker %}{% endblock %}
     {% block content %}{% endblock %}
-    <div class="footer-space"></div>
+    <section class="contact-band" aria-label="Contacto y redes">
+        <div class="contact-grid">
+            <div>
+                <div class="label"><svg class="icon icon-sm"><use href="#icon-mail"></use></svg>Contacto</div>
+                <h2>Contactanos para coordinar tu cobertura</h2>
+                <p>Podemos ayudarte con servicios de seguridad privada, custodia, monitoreo y soluciones tecnologicas adaptadas a tu operacion.</p>
+                <div class="contact-actions">
+                    <a class="contact-pill" href="mailto:contacto@bucam.local"><svg class="icon icon-sm"><use href="#icon-mail"></use></svg>contacto@bucam.local</a>
+                    <a class="contact-pill" href="tel:+540000000000"><svg class="icon icon-sm"><use href="#icon-wave"></use></svg>+54 000 000 0000</a>
+                </div>
+            </div>
+            <div>
+                <div class="label"><svg class="icon icon-sm"><use href="#icon-network"></use></svg>Redes sociales</div>
+                <div class="social-grid">
+                    <a class="social-card" href="#" aria-label="Instagram de BUCAM">
+                        <span class="icon-chip"><svg class="icon icon-sm"><use href="#icon-users"></use></svg></span>
+                        <div>
+                            <strong>Instagram</strong>
+                            <span>@bucam.seguridad</span>
+                        </div>
+                    </a>
+                    <a class="social-card" href="#" aria-label="Facebook de BUCAM">
+                        <span class="icon-chip"><svg class="icon icon-sm"><use href="#icon-home"></use></svg></span>
+                        <div>
+                            <strong>Facebook</strong>
+                            <span>BUCAM S.R.L.</span>
+                        </div>
+                    </a>
+                    <a class="social-card" href="#" aria-label="LinkedIn de BUCAM">
+                        <span class="icon-chip"><svg class="icon icon-sm"><use href="#icon-briefcase"></use></svg></span>
+                        <div>
+                            <strong>LinkedIn</strong>
+                            <span>BUCAM Seguridad</span>
+                        </div>
+                    </a>
+                    <a class="social-card" href="#" aria-label="WhatsApp de BUCAM">
+                        <span class="icon-chip"><svg class="icon icon-sm"><use href="#icon-bolt"></use></svg></span>
+                        <div>
+                            <strong>WhatsApp</strong>
+                            <span>Consultas y coordinacion</span>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+    <footer class="site-footer">Desarrollado por Dario Orquera</footer>
+    {% block extra_js %}{% endblock %}
+    <script>
+        (function () {
+            var nav = document.querySelector('[data-nav]');
+            var toggle = document.querySelector('[data-nav-toggle]');
+            if (!nav || !toggle) return;
+
+            toggle.addEventListener('click', function () {
+                var isOpen = nav.classList.toggle('is-open');
+                toggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+                toggle.setAttribute('aria-label', isOpen ? 'Cerrar menu' : 'Abrir menu');
+            });
+
+            nav.querySelectorAll('.nav-inner a').forEach(function (link) {
+                link.addEventListener('click', function () {
+                    if (window.innerWidth <= 720) {
+                        nav.classList.remove('is-open');
+                        toggle.setAttribute('aria-expanded', 'false');
+                        toggle.setAttribute('aria-label', 'Abrir menu');
+                    }
+                });
+            });
+        }());
+    </script>
 </body>
 </html>
