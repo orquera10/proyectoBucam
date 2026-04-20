@@ -45,13 +45,13 @@ class HomeViewTests(TestCase):
         self.assertContains(second_page, 'Entrada 6')
 
     def test_home_page_filters_posts_by_title(self):
-        Post.objects.create(
+        matching_post = Post.objects.create(
             title='Custodia avanzada',
             excerpt='Resumen 1',
             body='Contenido',
             published_at=timezone.now(),
         )
-        Post.objects.create(
+        non_matching_post = Post.objects.create(
             title='Monitoreo remoto',
             excerpt='Resumen 2',
             body='Contenido',
@@ -61,7 +61,8 @@ class HomeViewTests(TestCase):
         response = self.client.get(reverse('core:home'), {'q': 'Custodia'})
 
         self.assertContains(response, 'Custodia avanzada')
-        self.assertNotContains(response, 'Monitoreo remoto')
+        self.assertIn(matching_post, response.context['posts_page'].object_list)
+        self.assertNotIn(non_matching_post, response.context['posts_page'].object_list)
 
     def test_post_detail_renders_published_post(self):
         post = Post.objects.create(
@@ -116,3 +117,17 @@ class HomeViewTests(TestCase):
                 response = self.client.get(reverse(url_name))
                 self.assertEqual(response.status_code, 200)
                 self.assertContains(response, label)
+
+    def test_ticker_renders_on_internal_pages(self):
+        post = Post.objects.create(
+            title='Novedad institucional',
+            excerpt='Seguimiento operativo permanente.',
+            body='Contenido',
+            published_at=timezone.now(),
+        )
+
+        mission_response = self.client.get(reverse('core:mission'))
+        detail_response = self.client.get(post.get_absolute_url())
+
+        self.assertContains(mission_response, 'Novedad institucional')
+        self.assertContains(detail_response, 'Novedad institucional')

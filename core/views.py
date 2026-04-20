@@ -15,6 +15,22 @@ NAV_PAGES = [
 ]
 
 
+TICKER_FALLBACK = [
+    {
+        'title': 'Protegemos lo que mas importa.',
+        'excerpt': 'Servicios integrales de seguridad privada con enfoque preventivo.',
+    },
+    {
+        'title': 'Cobertura operativa 24/7.',
+        'excerpt': 'Respuesta coordinada y seguimiento permanente para cada servicio.',
+    },
+    {
+        'title': 'Tecnologia aplicada a la seguridad.',
+        'excerpt': 'Monitoreo, videovigilancia y soluciones adaptadas a cada cliente.',
+    },
+]
+
+
 INFO_PAGES = {
     'mission': {
         'title': 'Mision y vision',
@@ -104,10 +120,18 @@ INFO_PAGES = {
 
 
 def get_shared_context(current_page):
+    ticker_items = list(
+        Post.objects.filter(
+            is_published=True,
+            published_at__lte=timezone.now(),
+        )[:6]
+    )
     return {
         'nav_pages': NAV_PAGES,
         'current_page': current_page,
         'brand_banner_url': f"{settings.MEDIA_URL}bucamBanner.png",
+        'favicon_url': f"{settings.MEDIA_URL}logobanner.png",
+        'ticker_items': ticker_items or TICKER_FALLBACK,
     }
 
 
@@ -187,7 +211,6 @@ def home(request):
         'capabilities': capabilities,
         'metrics': metrics,
         'recent_highlights': recent_posts or fallback_recent,
-        'ticker_items': recent_posts or fallback_recent,
         'posts_page': posts_page,
         'search_query': search_query,
     }

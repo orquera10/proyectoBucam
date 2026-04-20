@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}BUCAM S.R.L. | Seguridad Privada{% endblock %}</title>
+    <link rel="icon" type="image/png" href="{{ favicon_url }}">
+    <link rel="shortcut icon" type="image/png" href="{{ favicon_url }}">
     <style>
         :root{
             --bg:#071116;
@@ -284,6 +286,28 @@
             text-transform:uppercase;
             letter-spacing:.12em;
         }
+        .ticker-rotator{
+            position:relative;
+            display:grid;
+            min-width:0;
+            flex:1;
+        }
+        .ticker-item{
+            grid-area:1 / 1;
+            opacity:0;
+            transform:translateY(6px);
+            transition:opacity .35s ease, transform .35s ease;
+            pointer-events:none;
+            white-space:nowrap;
+            overflow:hidden;
+            text-overflow:ellipsis;
+        }
+        .ticker-item.is-active{
+            opacity:1;
+            transform:translateY(0);
+            pointer-events:auto;
+        }
+        .ticker-item a{color:#d9e7ee}
         .card,.section,.sidebar-card,.cta,.detail-card,.page-hero,.page-section,.recent-item,.article{
             border:1px solid var(--line);
             background:var(--panel);
@@ -365,70 +389,85 @@
         .contact-band{
             width:min(1180px,calc(100% - 32px));
             margin:22px auto 0;
-            padding:24px;
+            padding:22px 24px;
             border:1px solid var(--line);
-            border-radius:24px;
-            background:
-                radial-gradient(circle at top right, rgba(72,169,255,.14), transparent 30%),
-                linear-gradient(135deg, rgba(110,231,210,.08), rgba(5,12,18,.92));
+            border-radius:20px;
+            background:rgba(5,12,18,.42);
             box-shadow:var(--shadow);
         }
         .contact-grid{
             display:grid;
-            grid-template-columns:1.1fr .9fr;
-            gap:22px;
+            grid-template-columns:minmax(0,1fr) minmax(320px,.85fr);
+            gap:28px;
             align-items:start;
         }
+        .contact-panel,
+        .social-panel{
+            display:grid;
+            gap:14px;
+        }
         .contact-band h2{
-            margin:0 0 12px;
-            font-size:clamp(1.35rem,2.2vw,2rem);
+            margin:0;
+            font-size:clamp(1.15rem,1.8vw,1.55rem);
         }
         .contact-band p{
             margin:0;
             color:var(--muted);
-            line-height:1.75;
+            line-height:1.7;
+        }
+        .contact-intro{
+            max-width:52ch;
         }
         .contact-actions{
-            display:flex;
-            flex-wrap:wrap;
-            gap:10px;
-            margin-top:18px;
+            display:grid;
+            gap:8px;
         }
         .contact-pill{
-            display:inline-flex;
+            display:flex;
             align-items:center;
             gap:10px;
-            min-height:42px;
-            padding:10px 14px;
-            border:1px solid var(--line);
-            border-radius:999px;
-            background:rgba(255,255,255,.04);
+            min-height:0;
+            padding:0;
+            border:none;
+            border-radius:0;
+            background:transparent;
             color:#e8f5fa;
+        }
+        .contact-pill strong{
+            display:inline;
+            margin:0 6px 0 0;
+            color:#f3f7f9;
+            font-size:.9rem;
+        }
+        .contact-pill span{
+            color:var(--muted);
+            font-size:.9rem;
+            line-height:1.5;
         }
         .social-grid{
             display:grid;
-            grid-template-columns:repeat(2,minmax(0,1fr));
-            gap:12px;
+            grid-template-columns:1fr;
+            gap:8px;
         }
         .social-card{
             display:flex;
             align-items:center;
             gap:12px;
-            min-height:74px;
-            padding:14px 16px;
-            border:1px solid var(--line);
-            border-radius:18px;
-            background:rgba(255,255,255,.04);
+            min-height:0;
+            padding:0;
+            border:none;
+            border-radius:0;
+            background:transparent;
         }
         .social-card strong{
-            display:block;
-            margin-bottom:4px;
+            display:inline;
+            margin:0 6px 0 0;
             color:#f3f7f9;
-            font-size:.95rem;
+            font-size:.9rem;
         }
         .social-card span{
             color:var(--muted);
-            font-size:.88rem;
+            font-size:.9rem;
             line-height:1.5;
         }
         .site-footer{
@@ -442,9 +481,59 @@
             text-align:center;
             font-size:.92rem;
         }
+        .footer-signature{
+            display:inline-flex;
+            align-items:center;
+            justify-content:center;
+            gap:10px;
+        }
+        .footer-badge{
+            display:inline-flex;
+            align-items:center;
+            justify-content:center;
+            width:30px;
+            height:30px;
+            border:1px solid var(--line);
+            border-radius:999px;
+            background:rgba(255,255,255,.04);
+            color:#dffaff;
+            animation:footerPulse 2.4s ease-in-out infinite;
+        }
+        .back-to-top{
+            position:fixed;
+            right:22px;
+            bottom:22px;
+            display:inline-flex;
+            align-items:center;
+            justify-content:center;
+            width:48px;
+            height:48px;
+            border:none;
+            border-radius:999px;
+            background:linear-gradient(135deg,var(--brand),#8be4ff);
+            color:#031119;
+            box-shadow:0 18px 34px rgba(0,0,0,.28);
+            cursor:pointer;
+            opacity:0;
+            visibility:hidden;
+            transform:translateY(10px);
+            transition:opacity .25s ease, transform .25s ease, visibility .25s ease;
+            z-index:30;
+        }
+        .back-to-top svg{transform:rotate(-90deg)}
+        .back-to-top.is-visible{
+            opacity:1;
+            visibility:visible;
+            transform:translateY(0);
+        }
+        .back-to-top:hover{transform:translateY(-2px)}
         @keyframes rise{
             from{opacity:0;transform:translateY(18px)}
             to{opacity:1;transform:translateY(0)}
+        }
+        @keyframes footerPulse{
+            0%,100%{transform:scale(1);box-shadow:0 0 0 rgba(110,231,210,0)}
+            50%{transform:scale(1.08);box-shadow:0 0 18px rgba(110,231,210,.18)}
         }
         @media (max-width:980px){
             .top-inner,.page-grid{grid-template-columns:1fr}
@@ -453,8 +542,17 @@
             .contact-grid,.social-grid{grid-template-columns:1fr}
         }
         @media (max-width:720px){
-            .shell{width:min(100% - 20px,1180px)}
-            .nav.shell{width:min(100% - 20px,1180px)}
+            .shell{width:100%}
+            .top,
+            .nav,
+            .ticker,
+            .page-hero,
+            .contact-band,
+            .site-footer{
+                width:100%;
+                margin-left:0;
+                margin-right:0;
+            }
             .top{min-height:220px}
             .top-stat span{max-width:none}
             .nav-bar{
@@ -476,6 +574,24 @@
                 text-align:center;
             }
             .page-hero{padding:28px 22px}
+            .page-grid{
+                gap:16px;
+                padding:20px 0 32px;
+            }
+            .page-section,
+            .article,
+            .sidebar-card{
+                border-radius:20px;
+            }
+            .contact-band{
+                margin-top:18px;
+                padding:20px;
+                border-radius:20px;
+            }
+            .site-footer{
+                margin-bottom:18px;
+                border-radius:16px;
+            }
         }
         {% block extra_css %}{% endblock %}
     </style>
@@ -542,6 +658,26 @@
             <path d="M4 12h16"></path>
             <path d="M4 17h16"></path>
         </symbol>
+        <symbol id="icon-code" viewBox="0 0 24 24">
+            <path d="M8 8l-4 4 4 4"></path>
+            <path d="M16 8l4 4-4 4"></path>
+            <path d="M14 4l-4 16"></path>
+        </symbol>
+        <symbol id="icon-phone" viewBox="0 0 24 24">
+            <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.8 19.8 0 0 1-8.63-3.07A19.5 19.5 0 0 1 5.15 12.8 19.8 19.8 0 0 1 2.08 4.09 2 2 0 0 1 4.07 2h3a2 2 0 0 1 2 1.72c.12.9.33 1.77.63 2.6a2 2 0 0 1-.45 2.11L8 9.91a16 16 0 0 0 6.09 6.09l1.48-1.25a2 2 0 0 1 2.11-.45c.83.3 1.7.51 2.6.63A2 2 0 0 1 22 16.92z"></path>
+        </symbol>
+        <symbol id="icon-whatsapp" viewBox="0 0 24 24">
+            <path d="M20 11.5A8.5 8.5 0 0 1 7.4 19l-3.4 1 1.1-3.2A8.5 8.5 0 1 1 20 11.5z"></path>
+            <path d="M9.8 8.8c.2-.4.4-.4.6-.4h.5c.1 0 .4 0 .5.4.2.5.7 1.7.8 1.8.1.2.1.4 0 .6-.1.2-.2.4-.4.5l-.4.4c-.1.1-.2.2-.1.4.1.2.5.9 1.1 1.4.7.6 1.3.8 1.5.9.2.1.3 0 .5-.1l.6-.7c.1-.2.3-.2.5-.1.2.1 1.5.7 1.7.8.2.1.4.2.4.4 0 .2 0 1-.7 1.4-.7.4-1.6.4-2.2.2-.6-.2-2.3-.8-3.8-2.2-1.2-1.1-2-2.5-2.3-3.1-.2-.6-.1-1.4.3-1.9.4-.5.8-.8 1-.8z"></path>
+        </symbol>
+        <symbol id="icon-instagram" viewBox="0 0 24 24">
+            <rect x="3" y="3" width="18" height="18" rx="5"></rect>
+            <circle cx="12" cy="12" r="4"></circle>
+            <circle cx="17.5" cy="6.5" r=".8" fill="currentColor" stroke="none"></circle>
+        </symbol>
+        <symbol id="icon-facebook" viewBox="0 0 24 24">
+            <path d="M14 8h3V4h-3c-2.8 0-5 2.2-5 5v3H6v4h3v5h4v-5h3.2l.8-4H13V9c0-.6.4-1 1-1z"></path>
+        </symbol>
     </svg>
     <header class="shell top" aria-label="Cobertura integral"></header>
     <nav class="shell nav" data-nav>
@@ -564,55 +700,69 @@
             {% endfor %}
         </div>
     </nav>
-    {% block ticker %}{% endblock %}
+    {% block ticker %}
+        <div class="shell ticker" data-ticker>
+            <strong><svg class="icon icon-sm"><use href="#icon-wave"></use></svg></strong>
+            <div class="ticker-rotator">
+                {% for item in ticker_items %}
+                    <span class="ticker-item{% if forloop.first %} is-active{% endif %}">
+                        {% if item.get_absolute_url %}<a href="{{ item.get_absolute_url }}">{% endif %}
+                        {{ item.title }}{% if item.excerpt %} - {{ item.excerpt }}{% endif %}
+                        {% if item.get_absolute_url %}</a>{% endif %}
+                    </span>
+                {% endfor %}
+            </div>
+        </div>
+    {% endblock %}
     {% block content %}{% endblock %}
     <section class="contact-band" aria-label="Contacto y redes">
         <div class="contact-grid">
-            <div>
+            <div class="contact-panel">
                 <div class="label"><svg class="icon icon-sm"><use href="#icon-mail"></use></svg>Contacto</div>
-                <h2>Contactanos para coordinar tu cobertura</h2>
-                <p>Podemos ayudarte con servicios de seguridad privada, custodia, monitoreo y soluciones tecnologicas adaptadas a tu operacion.</p>
+                <div class="contact-intro">
+                    <h2>Contactanos para coordinar tu cobertura</h2>
+                    <p>Podemos ayudarte con servicios de seguridad privada, custodia, monitoreo y soluciones tecnologicas adaptadas a tu operacion.</p>
+                </div>
                 <div class="contact-actions">
-                    <a class="contact-pill" href="mailto:contacto@bucam.local"><svg class="icon icon-sm"><use href="#icon-mail"></use></svg>contacto@bucam.local</a>
-                    <a class="contact-pill" href="tel:+540000000000"><svg class="icon icon-sm"><use href="#icon-wave"></use></svg>+54 000 000 0000</a>
+                    <a class="contact-pill" href="mailto:contacto@bucam.local">
+                        <svg class="icon icon-sm"><use href="#icon-mail"></use></svg>
+                        <div><strong>Email</strong><span>contacto@bucam.local</span></div>
+                    </a>
+                    <a class="contact-pill" href="tel:+540000000000">
+                        <svg class="icon icon-sm"><use href="#icon-phone"></use></svg>
+                        <div><strong>Telefono</strong><span>+54 000 000 0000</span></div>
+                    </a>
+                    <a class="contact-pill" href="#" aria-label="WhatsApp de BUCAM">
+                        <svg class="icon icon-sm"><use href="#icon-whatsapp"></use></svg>
+                        <div><strong>WhatsApp</strong><span>Consultas y coordinacion directa</span></div>
+                    </a>
                 </div>
             </div>
-            <div>
+            <div class="social-panel">
                 <div class="label"><svg class="icon icon-sm"><use href="#icon-network"></use></svg>Redes sociales</div>
+                <p>Seguinos para ver novedades, contenidos institucionales y actualizaciones sobre nuestros servicios.</p>
                 <div class="social-grid">
                     <a class="social-card" href="#" aria-label="Instagram de BUCAM">
-                        <span class="icon-chip"><svg class="icon icon-sm"><use href="#icon-users"></use></svg></span>
-                        <div>
-                            <strong>Instagram</strong>
-                            <span>@bucam.seguridad</span>
-                        </div>
+                        <span class="icon-chip"><svg class="icon icon-sm"><use href="#icon-instagram"></use></svg></span>
+                        <div><strong>Instagram</strong><span>@bucam.seguridad</span></div>
                     </a>
                     <a class="social-card" href="#" aria-label="Facebook de BUCAM">
-                        <span class="icon-chip"><svg class="icon icon-sm"><use href="#icon-home"></use></svg></span>
-                        <div>
-                            <strong>Facebook</strong>
-                            <span>BUCAM S.R.L.</span>
-                        </div>
-                    </a>
-                    <a class="social-card" href="#" aria-label="LinkedIn de BUCAM">
-                        <span class="icon-chip"><svg class="icon icon-sm"><use href="#icon-briefcase"></use></svg></span>
-                        <div>
-                            <strong>LinkedIn</strong>
-                            <span>BUCAM Seguridad</span>
-                        </div>
-                    </a>
-                    <a class="social-card" href="#" aria-label="WhatsApp de BUCAM">
-                        <span class="icon-chip"><svg class="icon icon-sm"><use href="#icon-bolt"></use></svg></span>
-                        <div>
-                            <strong>WhatsApp</strong>
-                            <span>Consultas y coordinacion</span>
-                        </div>
+                        <span class="icon-chip"><svg class="icon icon-sm"><use href="#icon-facebook"></use></svg></span>
+                        <div><strong>Facebook</strong><span>BUCAM S.R.L.</span></div>
                     </a>
                 </div>
             </div>
         </div>
     </section>
-    <footer class="site-footer">Desarrollado por Dario Orquera</footer>
+    <footer class="site-footer">
+        <span class="footer-signature">
+            <span class="footer-badge"><svg class="icon icon-sm"><use href="#icon-code"></use></svg></span>
+            <span>Desarrollado por Dario Orquera</span>
+        </span>
+    </footer>
+    <button class="back-to-top" type="button" aria-label="Volver arriba" data-back-to-top>
+        <svg class="icon"><use href="#icon-arrow-right"></use></svg>
+    </button>
     {% block extra_js %}{% endblock %}
     <script>
         (function () {
@@ -635,6 +785,41 @@
                     }
                 });
             });
+        }());
+
+        (function () {
+            var button = document.querySelector('[data-back-to-top]');
+            if (!button) return;
+
+            var toggleVisibility = function () {
+                if (window.scrollY > 260) {
+                    button.classList.add('is-visible');
+                } else {
+                    button.classList.remove('is-visible');
+                }
+            };
+
+            button.addEventListener('click', function () {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+
+            window.addEventListener('scroll', toggleVisibility, { passive: true });
+            toggleVisibility();
+        }());
+
+        (function () {
+            var ticker = document.querySelector('[data-ticker]');
+            if (!ticker) return;
+
+            var items = ticker.querySelectorAll('.ticker-item');
+            if (items.length < 2) return;
+
+            var index = 0;
+            window.setInterval(function () {
+                items[index].classList.remove('is-active');
+                index = (index + 1) % items.length;
+                items[index].classList.add('is-active');
+            }, 3200);
         }());
     </script>
 </body>

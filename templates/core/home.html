@@ -186,28 +186,6 @@
             border-color:transparent;
             font-weight:700;
         }
-        .ticker-rotator{
-            position:relative;
-            display:grid;
-            min-width:0;
-            flex:1;
-        }
-        .ticker-item{
-            grid-area:1 / 1;
-            opacity:0;
-            transform:translateY(6px);
-            transition:opacity .35s ease, transform .35s ease;
-            pointer-events:none;
-            white-space:nowrap;
-            overflow:hidden;
-            text-overflow:ellipsis;
-        }
-        .ticker-item.is-active{
-            opacity:1;
-            transform:translateY(0);
-            pointer-events:auto;
-        }
-        .ticker-item a{color:#d9e7ee}
         @media (max-width:980px){
             .featured-grid{grid-template-columns:1fr}
             .post-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
@@ -219,24 +197,22 @@
             }
         }
         @media (max-width:640px){
+            .featured-wrap,
+            .post-feed{
+                width:100%;
+                padding-left:0;
+                padding-right:0;
+            }
             .feed-search{flex-direction:column;align-items:stretch}
+            .featured-grid,
+            .post-grid{gap:12px}
             .post-grid{grid-template-columns:1fr}
+            .featured-card,
+            .post-card{
+                width:100%;
+                border-radius:20px;
+            }
         }
-{% endblock %}
-
-{% block ticker %}
-    <div class="shell ticker" data-ticker>
-        <strong><svg class="icon icon-sm"><use href="#icon-wave"></use></svg></strong>
-        <div class="ticker-rotator">
-            {% for item in ticker_items %}
-                <span class="ticker-item{% if forloop.first %} is-active{% endif %}">
-                    {% if item.get_absolute_url %}<a href="{{ item.get_absolute_url }}">{% endif %}
-                    {{ item.title }}{% if item.excerpt %} - {{ item.excerpt }}{% endif %}
-                    {% if item.get_absolute_url %}</a>{% endif %}
-                </span>
-            {% endfor %}
-        </div>
-    </div>
 {% endblock %}
 
 {% block content %}
@@ -325,21 +301,6 @@
 
 {% block extra_js %}
     <script>
-        (function () {
-            var ticker = document.querySelector('[data-ticker]');
-            if (!ticker) return;
-
-            var items = ticker.querySelectorAll('.ticker-item');
-            if (items.length < 2) return;
-
-            var index = 0;
-            window.setInterval(function () {
-                items[index].classList.remove('is-active');
-                index = (index + 1) % items.length;
-                items[index].classList.add('is-active');
-            }, 3200);
-        }());
-
         (function () {
             var input = document.querySelector('[data-live-search]');
             if (!input) return;
