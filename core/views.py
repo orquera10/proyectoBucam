@@ -131,8 +131,8 @@ def get_shared_context(current_page):
     return {
         'nav_pages': NAV_PAGES,
         'current_page': current_page,
-        'brand_banner_url': f"{settings.MEDIA_URL}bucamBanner.png",
-        'favicon_url': f"{settings.MEDIA_URL}logobanner.png",
+        'brand_banner_url': f"{settings.STATIC_URL}bucamBanner.png",
+        'favicon_url': f"{settings.STATIC_URL}logoBanner.png",
         'ticker_items': ticker_items or TICKER_FALLBACK,
         'contact_email': os.getenv('CONTACT_EMAIL', 'contacto@bucam.local'),
         'contact_phone': os.getenv('CONTACT_PHONE', '+54 000 000 0000'),
