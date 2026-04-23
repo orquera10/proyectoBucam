@@ -1,8 +1,8 @@
 #!/bin/sh
 set -e
 
-DB_DIR="$(dirname "${SQLITE_PATH:-/app/db.sqlite3}")"
-mkdir -p "$DB_DIR" "${MEDIA_ROOT:-/app/media}" /app/static /app/staticfiles
+DB_DIR="$(dirname "${SQLITE_PATH:-/media/db.sqlite3}")"
+mkdir -p "$DB_DIR" "${MEDIA_ROOT:-/media/media}" /app/static /app/staticfiles
 
 python manage.py migrate --noinput
 python manage.py collectstatic --noinput
