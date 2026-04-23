@@ -1,7 +1,9 @@
-.venv/
+.git
+.gitignore
+.venv
+.env
 __pycache__/
 *.py[cod]
-.env
 db.sqlite3
 staticfiles/
 media/

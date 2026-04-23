@@ -724,15 +724,15 @@
                     <p>Podemos ayudarte con servicios de seguridad privada, custodia, monitoreo y soluciones tecnologicas adaptadas a tu operacion.</p>
                 </div>
                 <div class="contact-actions">
-                    <a class="contact-pill" href="mailto:contacto@bucam.local">
+                    <a class="contact-pill" href="mailto:{{ contact_email }}">
                         <svg class="icon icon-sm"><use href="#icon-mail"></use></svg>
-                        <div><strong>Email</strong><span>contacto@bucam.local</span></div>
+                        <div><strong>Email</strong><span>{{ contact_email }}</span></div>
                     </a>
-                    <a class="contact-pill" href="tel:+540000000000">
+                    <a class="contact-pill" href="tel:{{ contact_phone }}">
                         <svg class="icon icon-sm"><use href="#icon-phone"></use></svg>
-                        <div><strong>Telefono</strong><span>+54 000 000 0000</span></div>
+                        <div><strong>Telefono</strong><span>{{ contact_phone }}</span></div>
                     </a>
-                    <a class="contact-pill" href="#" aria-label="WhatsApp de BUCAM">
+                    <a class="contact-pill" href="{{ whatsapp_url }}" aria-label="WhatsApp de BUCAM">
                         <svg class="icon icon-sm"><use href="#icon-whatsapp"></use></svg>
                         <div><strong>WhatsApp</strong><span>Consultas y coordinacion directa</span></div>
                     </a>
@@ -742,14 +742,12 @@
                 <div class="label"><svg class="icon icon-sm"><use href="#icon-network"></use></svg>Redes sociales</div>
                 <p>Seguinos para ver novedades, contenidos institucionales y actualizaciones sobre nuestros servicios.</p>
                 <div class="social-grid">
-                    <a class="social-card" href="#" aria-label="Instagram de BUCAM">
-                        <span class="icon-chip"><svg class="icon icon-sm"><use href="#icon-instagram"></use></svg></span>
-                        <div><strong>Instagram</strong><span>@bucam.seguridad</span></div>
-                    </a>
-                    <a class="social-card" href="#" aria-label="Facebook de BUCAM">
-                        <span class="icon-chip"><svg class="icon icon-sm"><use href="#icon-facebook"></use></svg></span>
-                        <div><strong>Facebook</strong><span>BUCAM S.R.L.</span></div>
-                    </a>
+                    {% for social in social_links %}
+                        <a class="social-card" href="{{ social.url }}" aria-label="{{ social.name }} de BUCAM">
+                            <span class="icon-chip"><svg class="icon icon-sm"><use href="#icon-{{ social.name|lower }}"></use></svg></span>
+                            <div><strong>{{ social.name }}</strong><span>{{ social.handle }}</span></div>
+                        </a>
+                    {% endfor %}
                 </div>
             </div>
         </div>

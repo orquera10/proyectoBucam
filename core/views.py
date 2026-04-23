@@ -1,3 +1,5 @@
+import os
+
 from django.core.paginator import Paginator
 from django.shortcuts import get_object_or_404, render
 from django.conf import settings
@@ -132,6 +134,21 @@ def get_shared_context(current_page):
         'brand_banner_url': f"{settings.MEDIA_URL}bucamBanner.png",
         'favicon_url': f"{settings.MEDIA_URL}logobanner.png",
         'ticker_items': ticker_items or TICKER_FALLBACK,
+        'contact_email': os.getenv('CONTACT_EMAIL', 'contacto@bucam.local'),
+        'contact_phone': os.getenv('CONTACT_PHONE', '+54 000 000 0000'),
+        'whatsapp_url': os.getenv('WHATSAPP_URL', '#'),
+        'social_links': [
+            {
+                'name': 'Instagram',
+                'url': os.getenv('INSTAGRAM_URL', '#'),
+                'handle': os.getenv('INSTAGRAM_HANDLE', '@bucam.seguridad'),
+            },
+            {
+                'name': 'Facebook',
+                'url': os.getenv('FACEBOOK_URL', '#'),
+                'handle': os.getenv('FACEBOOK_HANDLE', 'BUCAM S.R.L.'),
+            },
+        ],
     }
 
 
