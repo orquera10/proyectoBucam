@@ -25,6 +25,7 @@
             --radius-lg:24px;
             --radius-md:18px;
             --radius-sm:12px;
+            --page-gutter:20px;
         }
         *{box-sizing:border-box}
         html{scroll-behavior:smooth}
@@ -66,7 +67,7 @@
             background:radial-gradient(circle, rgba(110,231,210,.12), transparent 70%);
         }
         a{color:inherit;text-decoration:none}
-        .shell{width:min(1180px,calc(100% - 32px));margin:0 auto}
+        .shell{width:min(1180px,calc(100% - (var(--page-gutter) * 2)));margin:0 auto}
         .top{
             position:relative;
             margin:18px auto 0;
@@ -387,7 +388,7 @@
             background:var(--panel-soft);
         }
         .contact-band{
-            width:min(1180px,calc(100% - 32px));
+            width:min(1180px,calc(100% - (var(--page-gutter) * 2)));
             margin:22px auto 0;
             padding:22px 24px;
             border:1px solid var(--line);
@@ -471,7 +472,7 @@
             line-height:1.5;
         }
         .site-footer{
-            width:min(1180px,calc(100% - 32px));
+            width:min(1180px,calc(100% - (var(--page-gutter) * 2)));
             margin:18px auto 28px;
             padding:18px 20px;
             border:1px solid var(--line);
@@ -542,17 +543,7 @@
             .contact-grid,.social-grid{grid-template-columns:1fr}
         }
         @media (max-width:720px){
-            .shell{width:100%}
-            .top,
-            .nav,
-            .ticker,
-            .page-hero,
-            .contact-band,
-            .site-footer{
-                width:100%;
-                margin-left:0;
-                margin-right:0;
-            }
+            :root{--page-gutter:12px}
             .top{min-height:220px}
             .top-stat span{max-width:none}
             .nav-bar{
@@ -724,15 +715,15 @@
                     <p>Podemos ayudarte con servicios de seguridad privada, custodia, monitoreo y soluciones tecnologicas adaptadas a tu operacion.</p>
                 </div>
                 <div class="contact-actions">
-                    <a class="contact-pill" href="mailto:{{ contact_email }}">
+                    <a class="contact-pill" href="mailto:{{ contact_email }}" target="_blank" rel="noopener noreferrer">
                         <svg class="icon icon-sm"><use href="#icon-mail"></use></svg>
                         <div><strong>Email</strong><span>{{ contact_email }}</span></div>
                     </a>
-                    <a class="contact-pill" href="tel:{{ contact_phone }}">
+                    <a class="contact-pill" href="tel:{{ contact_phone }}" target="_blank" rel="noopener noreferrer">
                         <svg class="icon icon-sm"><use href="#icon-phone"></use></svg>
                         <div><strong>Telefono</strong><span>{{ contact_phone }}</span></div>
                     </a>
-                    <a class="contact-pill" href="{{ whatsapp_url }}" aria-label="WhatsApp de BUCAM">
+                    <a class="contact-pill" href="{{ whatsapp_url }}" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp de BUCAM">
                         <svg class="icon icon-sm"><use href="#icon-whatsapp"></use></svg>
                         <div><strong>WhatsApp</strong><span>Consultas y coordinacion directa</span></div>
                     </a>
@@ -743,7 +734,7 @@
                 <p>Seguinos para ver novedades, contenidos institucionales y actualizaciones sobre nuestros servicios.</p>
                 <div class="social-grid">
                     {% for social in social_links %}
-                        <a class="social-card" href="{{ social.url }}" aria-label="{{ social.name }} de BUCAM">
+                        <a class="social-card" href="{{ social.url }}" target="_blank" rel="noopener noreferrer" aria-label="{{ social.name }} de BUCAM">
                             <span class="icon-chip"><svg class="icon icon-sm"><use href="#icon-{{ social.name|lower }}"></use></svg></span>
                             <div><strong>{{ social.name }}</strong><span>{{ social.handle }}</span></div>
                         </a>
