@@ -1,5 +1,7 @@
 import re
 
+from django.core.exceptions import ValidationError
+from django.core.validators import FileExtensionValidator
 from django.db import models
 from django.urls import reverse
 from django.utils import timezone
@@ -135,7 +137,12 @@ class PostGalleryImage(models.Model):
         on_delete=models.CASCADE,
         related_name='gallery_images',
     )
-    image = models.ImageField(upload_to='posts/gallery/')
+    image = models.ImageField(upload_to='posts/gallery/', blank=True)
+    video = models.FileField(
+        upload_to='posts/gallery/videos/',
+        blank=True,
+        validators=[FileExtensionValidator(allowed_extensions=['mp4', 'webm', 'mov'])],
+    )
     alt_text = models.CharField(max_length=180, blank=True)
     order = models.PositiveIntegerField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -148,8 +155,25 @@ class PostGalleryImage(models.Model):
     def __str__(self):
         return self.alt_text or f'Galeria de {self.post.title}'
 
+    def clean(self):
+        super().clean()
+        if not self.image and not self.video:
+            raise ValidationError('Carga una imagen o un video para la galeria.')
+        if self.image and self.video:
+            raise ValidationError('Carga solo una imagen o solo un video por elemento de galeria.')
+
     @property
     def image_url(self):
         if self.image:
             return self.image.url
         return ''
+
+    @property
+    def video_url(self):
+        if self.video:
+            return self.video.url
+        return ''
+
+    @property
+    def is_video(self):
+        return bool(self.video)

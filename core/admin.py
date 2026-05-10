@@ -8,7 +8,7 @@ class PostGalleryImageInline(admin.TabularInline):
     extra = 0
     can_delete = True
     show_change_link = True
-    fields = ('image', 'alt_text', 'order')
+    fields = ('image', 'video', 'alt_text', 'order')
 
 
 @admin.register(Post)
@@ -63,7 +63,11 @@ class PostAdmin(admin.ModelAdmin):
 
 @admin.register(PostGalleryImage)
 class PostGalleryImageAdmin(admin.ModelAdmin):
-    list_display = ('post', 'alt_text', 'order', 'created_at')
+    list_display = ('post', 'alt_text', 'media_kind', 'order', 'created_at')
     list_filter = ('post', 'created_at')
     search_fields = ('post__title', 'alt_text')
     ordering = ('post', 'order', 'created_at')
+
+    @admin.display(description='tipo')
+    def media_kind(self, obj):
+        return 'Video' if obj.is_video else 'Imagen'

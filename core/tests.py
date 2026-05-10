@@ -128,6 +128,25 @@ class HomeViewTests(TestCase):
         self.assertContains(response_with_gallery, 'Galeria')
         self.assertContains(response_with_gallery, 'Equipo operativo en servicio')
 
+    def test_post_detail_renders_gallery_video(self):
+        post = Post.objects.create(
+            title='Entrada con video',
+            excerpt='Resumen base.',
+            body='Contenido',
+            published_at=timezone.now(),
+        )
+        PostGalleryImage.objects.create(
+            post=post,
+            video=SimpleUploadedFile('recorrido.mp4', b'video-content', content_type='video/mp4'),
+            alt_text='Recorrido operativo',
+        )
+
+        response = self.client.get(post.get_absolute_url())
+
+        self.assertContains(response, '<video controls preload="metadata" aria-label="Recorrido operativo">')
+        self.assertContains(response, 'recorrido')
+        self.assertContains(response, '.mp4')
+
     def test_navbar_pages_render_successfully(self):
         pages = [
             ('core:mission', 'Mision y vision'),
