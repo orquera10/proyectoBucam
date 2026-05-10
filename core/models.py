@@ -127,3 +127,29 @@ class Post(models.Model):
 
     def get_absolute_url(self):
         return reverse('core:post_detail', kwargs={'slug': self.slug})
+
+
+class PostGalleryImage(models.Model):
+    post = models.ForeignKey(
+        Post,
+        on_delete=models.CASCADE,
+        related_name='gallery_images',
+    )
+    image = models.ImageField(upload_to='posts/gallery/')
+    alt_text = models.CharField(max_length=180, blank=True)
+    order = models.PositiveIntegerField(default=0)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['order', 'created_at']
+        verbose_name = 'imagen de galeria'
+        verbose_name_plural = 'imagenes de galeria'
+
+    def __str__(self):
+        return self.alt_text or f'Galeria de {self.post.title}'
+
+    @property
+    def image_url(self):
+        if self.image:
+            return self.image.url
+        return ''

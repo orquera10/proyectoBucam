@@ -1,8 +1,9 @@
 from django.test import TestCase
+from django.core.files.uploadedfile import SimpleUploadedFile
 from django.urls import reverse
 from django.utils import timezone
 
-from .models import Post
+from .models import Post, PostGalleryImage
 
 
 class HomeViewTests(TestCase):
@@ -103,6 +104,29 @@ class HomeViewTests(TestCase):
         self.assertContains(response, '<h3>Caracteristicas del servicio</h3>', html=True)
         self.assertContains(response, '<li>Primer item</li>', html=True)
         self.assertContains(response, '<li>Segundo item</li>', html=True)
+
+    def test_post_detail_renders_gallery_only_when_images_exist(self):
+        post = Post.objects.create(
+            title='Entrada con galeria',
+            excerpt='Resumen base.',
+            body='Contenido',
+            published_at=timezone.now(),
+        )
+
+        response_without_gallery = self.client.get(post.get_absolute_url())
+
+        self.assertNotContains(response_without_gallery, 'Galeria')
+
+        PostGalleryImage.objects.create(
+            post=post,
+            image=SimpleUploadedFile('galeria.jpg', b'file-content', content_type='image/jpeg'),
+            alt_text='Equipo operativo en servicio',
+        )
+
+        response_with_gallery = self.client.get(post.get_absolute_url())
+
+        self.assertContains(response_with_gallery, 'Galeria')
+        self.assertContains(response_with_gallery, 'Equipo operativo en servicio')
 
     def test_navbar_pages_render_successfully(self):
         pages = [

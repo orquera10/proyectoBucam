@@ -237,7 +237,7 @@ def home(request):
 
 def post_detail(request, slug):
     post = get_object_or_404(
-        Post,
+        Post.objects.prefetch_related('gallery_images'),
         slug=slug,
         is_published=True,
         published_at__lte=timezone.now(),
@@ -248,6 +248,7 @@ def post_detail(request, slug):
     ).exclude(pk=post.pk)[:3]
     context = {
         'post': post,
+        'gallery_images': list(post.gallery_images.all()),
         'recent_posts': recent_posts,
     }
     context.update(get_shared_context(''))

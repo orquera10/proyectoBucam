@@ -104,6 +104,87 @@
             margin-bottom:10px;
             line-height:1.85;
         }
+        .gallery{
+            margin-top:28px;
+        }
+        .gallery-shell{
+            position:relative;
+            overflow:hidden;
+            margin-top:16px;
+            border:1px solid var(--line);
+            border-radius:22px;
+            background:rgba(255,255,255,.03);
+        }
+        .gallery-track{
+            display:flex;
+            transition:transform .35s ease;
+            will-change:transform;
+        }
+        .gallery-slide{
+            flex:0 0 100%;
+            aspect-ratio:4/3;
+            margin:0;
+            background:rgba(255,255,255,.03);
+        }
+        .gallery-slide img{
+            display:block;
+            width:100%;
+            height:100%;
+            object-fit:cover;
+        }
+        .gallery-control{
+            position:absolute;
+            top:50%;
+            display:inline-flex;
+            align-items:center;
+            justify-content:center;
+            width:42px;
+            height:42px;
+            border:1px solid var(--line-strong);
+            border-radius:999px;
+            background:rgba(5,12,18,.76);
+            color:#effaff;
+            cursor:pointer;
+            transform:translateY(-50%);
+            backdrop-filter:blur(12px);
+            transition:background .2s ease, transform .2s ease, border-color .2s ease;
+            z-index:2;
+        }
+        .gallery-control:hover{
+            border-color:rgba(110,231,210,.42);
+            background:rgba(8,18,24,.92);
+            transform:translateY(-50%) scale(1.04);
+        }
+        .gallery-control:focus-visible{
+            outline:2px solid rgba(110,231,210,.55);
+            outline-offset:3px;
+        }
+        .gallery-control.is-prev{left:14px}
+        .gallery-control.is-next{right:14px}
+        .gallery-control.is-prev svg{transform:rotate(180deg)}
+        .gallery-dots{
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            gap:8px;
+            min-height:28px;
+            margin-top:12px;
+        }
+        .gallery-dot{
+            width:9px;
+            height:9px;
+            padding:0;
+            border:1px solid rgba(255,255,255,.24);
+            border-radius:999px;
+            background:rgba(255,255,255,.16);
+            cursor:pointer;
+            transition:width .2s ease, background .2s ease, border-color .2s ease;
+        }
+        .gallery-dot.is-active{
+            width:26px;
+            border-color:rgba(110,231,210,.62);
+            background:linear-gradient(135deg,var(--brand),#8be4ff);
+        }
         .sidebar{display:grid;gap:20px}
         .recent-list{display:grid;gap:14px}
         .recent-item{
@@ -118,6 +199,15 @@
             .layout{grid-template-columns:1fr}
             .hero{padding:28px}
             .body-media{width:min(100%, 780px)}
+        }
+        @media (max-width:560px){
+            .gallery-shell{border-radius:18px}
+            .gallery-control{
+                width:38px;
+                height:38px;
+            }
+            .gallery-control.is-prev{left:10px}
+            .gallery-control.is-next{right:10px}
         }
 {% endblock %}
 
@@ -156,6 +246,35 @@
                         {% endif %}
                     {% endfor %}
                 </div>
+                {% if gallery_images %}
+                    <section class="gallery" aria-label="Galeria de imagenes" data-gallery-carousel>
+                        <div class="label"><svg class="icon icon-sm"><use href="#icon-folder"></use></svg>Galeria</div>
+                        <div class="gallery-shell">
+                            <div class="gallery-track" data-gallery-track>
+                                {% for gallery_image in gallery_images %}
+                                    <figure class="gallery-slide">
+                                        <img src="{{ gallery_image.image_url }}" alt="{{ gallery_image.alt_text|default:post.title }}">
+                                    </figure>
+                                {% endfor %}
+                            </div>
+                            {% if gallery_images|length > 1 %}
+                                <button class="gallery-control is-prev" type="button" aria-label="Imagen anterior" data-gallery-prev>
+                                    <svg class="icon"><use href="#icon-arrow-right"></use></svg>
+                                </button>
+                                <button class="gallery-control is-next" type="button" aria-label="Imagen siguiente" data-gallery-next>
+                                    <svg class="icon"><use href="#icon-arrow-right"></use></svg>
+                                </button>
+                            {% endif %}
+                        </div>
+                        {% if gallery_images|length > 1 %}
+                            <div class="gallery-dots" aria-label="Seleccionar imagen">
+                                {% for gallery_image in gallery_images %}
+                                    <button class="gallery-dot{% if forloop.first %} is-active{% endif %}" type="button" aria-label="Ver imagen {{ forloop.counter }}" data-gallery-dot></button>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </section>
+                {% endif %}
             </article>
             <aside class="sidebar">
                 <section class="sidebar-card">
@@ -174,4 +293,52 @@
             </aside>
         </section>
     </main>
+{% endblock %}
+
+{% block extra_js %}
+    <script>
+        (function () {
+            document.querySelectorAll('[data-gallery-carousel]').forEach(function (carousel) {
+                var track = carousel.querySelector('[data-gallery-track]');
+                var slides = carousel.querySelectorAll('.gallery-slide');
+                var prev = carousel.querySelector('[data-gallery-prev]');
+                var next = carousel.querySelector('[data-gallery-next]');
+                var dots = carousel.querySelectorAll('[data-gallery-dot]');
+                if (!track || slides.length < 2) return;
+
+                var index = 0;
+
+                var update = function () {
+                    track.style.transform = 'translateX(-' + (index * 100) + '%)';
+                    dots.forEach(function (dot, dotIndex) {
+                        dot.classList.toggle('is-active', dotIndex === index);
+                    });
+                };
+
+                var goTo = function (nextIndex) {
+                    index = (nextIndex + slides.length) % slides.length;
+                    update();
+                };
+
+                prev.addEventListener('click', function () {
+                    goTo(index - 1);
+                });
+
+                next.addEventListener('click', function () {
+                    goTo(index + 1);
+                });
+
+                dots.forEach(function (dot, dotIndex) {
+                    dot.addEventListener('click', function () {
+                        goTo(dotIndex);
+                    });
+                });
+
+                carousel.addEventListener('keydown', function (event) {
+                    if (event.key === 'ArrowLeft') goTo(index - 1);
+                    if (event.key === 'ArrowRight') goTo(index + 1);
+                });
+            });
+        }());
+    </script>
 {% endblock %}

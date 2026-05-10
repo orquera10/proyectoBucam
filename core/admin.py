@@ -1,10 +1,19 @@
 from django.contrib import admin
 
-from .models import Post
+from .models import Post, PostGalleryImage
+
+
+class PostGalleryImageInline(admin.TabularInline):
+    model = PostGalleryImage
+    extra = 0
+    can_delete = True
+    show_change_link = True
+    fields = ('image', 'alt_text', 'order')
 
 
 @admin.register(Post)
 class PostAdmin(admin.ModelAdmin):
+    inlines = (PostGalleryImageInline,)
     list_display = (
         'title',
         'is_published',
@@ -50,3 +59,11 @@ class PostAdmin(admin.ModelAdmin):
             },
         ),
     )
+
+
+@admin.register(PostGalleryImage)
+class PostGalleryImageAdmin(admin.ModelAdmin):
+    list_display = ('post', 'alt_text', 'order', 'created_at')
+    list_filter = ('post', 'created_at')
+    search_fields = ('post__title', 'alt_text')
+    ordering = ('post', 'order', 'created_at')
